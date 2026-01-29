@@ -6,8 +6,8 @@ int main(){
     scanf("%d", &n);
     ptr = (int*)calloc(n,  sizeof(int));
     ptr[0] = 3;
-    free(ptr);
-    printf("%d", ptr[0]);
     
+    printf("%d", ptr[0]);
+
     return 0;
 }
