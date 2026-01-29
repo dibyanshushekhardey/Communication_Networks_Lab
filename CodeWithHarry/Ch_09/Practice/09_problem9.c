@@ -16,19 +16,19 @@ int compare(struct Date d1, struct Date d2)
         return 1;
     }
     else if(d1.yyyy < d2.yyyy){
-        return 0;
+        return -1;
     }
     else if(d1.mm > d2.mm){
         return 1;
     }
     else if(d1.mm < d2.mm){
-        return 0;
+        return -1;
     }
     else if(d1.dd > d2.dd){
         return 1;
     }
     else if(d1.dd < d2.dd){
-        return 0;
+        return -1;
     }
 }
 int main(){
