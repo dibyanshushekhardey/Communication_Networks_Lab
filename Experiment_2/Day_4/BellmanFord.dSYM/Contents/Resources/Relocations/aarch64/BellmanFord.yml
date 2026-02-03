@@ -1,0 +1,10 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/dibyanshu/Downloads/Communication_Networks_Lab/Experiment_2/Day_4/BellmanFord'
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _BellmanFord, symObjAddr: 0x0, symBinAddr: 0x100003948, symSize: 0x360 }
+  - { offsetInCU: 0x41, offset: 0x41, size: 0x8, addend: 0x0, symName: _BellmanFord, symObjAddr: 0x0, symBinAddr: 0x100003948, symSize: 0x360 }
+  - { offsetInCU: 0x145, offset: 0x145, size: 0x8, addend: 0x0, symName: _addEdge, symObjAddr: 0x360, symBinAddr: 0x100003CA8, symSize: 0x58 }
+  - { offsetInCU: 0x193, offset: 0x193, size: 0x8, addend: 0x0, symName: _displayMatrix, symObjAddr: 0x3B8, symBinAddr: 0x100003D00, symSize: 0xBC }
+  - { offsetInCU: 0x1EF, offset: 0x1EF, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x474, symBinAddr: 0x100003DBC, symSize: 0x140 }
+...

@@ -69,7 +69,12 @@ void floydWarshall(int mat[V][V]){
 					mat[i][j] = mat[i][j];
 				}
 			}
+			
 		}
+		printf("Step %d\n", k+1);
+		printf("----------------\n");
+		displayMatrix(mat);
+		printf("----------------\n");
 	}
 
 	printf("The matrix after adding Alg implementation is\n");
