@@ -2,13 +2,13 @@ clear;
 clc;
 close all;
 
-lambda_arr = 1:9;
+lambda_arr = 1:5;
 avg_age_arr = [];
 util_arr = [];
 
 %% BUFFER SIZE
 buff_size = 5;
-tot_sim_time = 1000;
+tot_sim_time = 10;
 for lambda = lambda_arr
  
 

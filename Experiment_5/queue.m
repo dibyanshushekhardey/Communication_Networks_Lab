@@ -6,7 +6,7 @@ function [tot_arr, tot_ser, tot_drop] = queue(tot_sim_time, buff_size, arr_mean,
     buffer = 0;
     tot_ser = 0;
     next_arr = exprnd(arr_mean);
-    next_ser = 9999;
+    next_ser = Inf;
     t = 0;
     arr_array = [];
     ser_array = [];
@@ -18,7 +18,7 @@ function [tot_arr, tot_ser, tot_drop] = queue(tot_sim_time, buff_size, arr_mean,
             if buffer < buff_size
                 buffer = buffer + 1;
                 if buffer == 1
-                        next_ser = t + exprnd(ser_mean);
+                    next_ser = t + exprnd(ser_mean);
                 end
             else
                 tot_drop = tot_drop + 1;
@@ -32,12 +32,12 @@ function [tot_arr, tot_ser, tot_drop] = queue(tot_sim_time, buff_size, arr_mean,
                 buffer = buffer - 1;
                 tot_ser = tot_ser +  1;
             end
-            ser_array = [ser_array next_ser];
+            ser_array = [ser_array tot_arr];
         end
         if buffer > 0
             next_ser = t + exprnd(ser_mean);
         else
-            next_ser = 9999;
+            next_ser = Inf;
         end
            
             %arr_array = [arr_array next_arr];
