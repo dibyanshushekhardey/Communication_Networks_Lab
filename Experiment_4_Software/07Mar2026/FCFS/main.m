@@ -12,7 +12,7 @@ util_arr = []; % utilizxation array
 
 %parameters
 buff_size = 5;
-tot_sim_time = 1000;
+tot_sim_time = 10000;
 mu = 10; % service rate
 ser_mean = 1 / mu; % service mean
 
