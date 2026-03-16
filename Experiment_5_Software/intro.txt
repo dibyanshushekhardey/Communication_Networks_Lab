@@ -1,0 +1,13 @@
+This folder contain sthe information about the TCP-UDP Programming.
+
+Questions ot report on Demo 1
+what is a port? do we need different ports in a multiclient architechture?
+can we have the sam eip address for different clients and still have a working multiclient architechture? how?
+
+gcc server.c -o server 
+gcc client1.c -o client1 
+gcc client2.c -o client2 
+gcc client3.c -o client3
+
+
+sh -c './server & ./client1 & ./client2 &./client3'
