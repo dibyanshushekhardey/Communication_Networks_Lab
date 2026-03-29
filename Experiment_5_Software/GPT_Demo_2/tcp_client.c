@@ -42,7 +42,7 @@ int main() {
             buffer[n] = '\0';
 
             if (strcmp(buffer, message) == 0) {
-                printf("Message %d echoed correctly\n", i+1);
+                printf("Performace Test Message %d\n", i+1);
             } else {
                 printf("Mismatch at message %d\n", i+1);
             }

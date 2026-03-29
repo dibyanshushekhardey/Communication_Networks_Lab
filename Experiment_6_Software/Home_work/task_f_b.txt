@@ -1,0 +1,23 @@
+Total packets drop: 
+   5.4935e+03
+
+Jain fairness index: 
+    0.7203
+
+Total packets drop: 
+   1.3436e+04
+
+Jain fairness index: 
+    0.7099
+
+Total packets drop: 
+   5.9228e+03
+
+Jain fairness index: 
+    0.6950
+
+Total packets drop: 
+  441.5000
+
+Jain fairness index: 
+    0.9966

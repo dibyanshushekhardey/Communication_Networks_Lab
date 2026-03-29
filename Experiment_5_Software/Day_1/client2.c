@@ -3,7 +3,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#define PORT 5000
+#define PORT 9000
 
 int main(int argc, char const* argv[])
 {
@@ -21,7 +21,7 @@ int main(int argc, char const* argv[])
 
     // Convert IPv4 and IPv6 addresses from text to binary
     // form
-    if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)
+    if (inet_pton(AF_INET, "127.0.0.2", &serv_addr.sin_addr)
         <= 0) {
         printf(
             "\nInvalid address/ Address not supported \n");
