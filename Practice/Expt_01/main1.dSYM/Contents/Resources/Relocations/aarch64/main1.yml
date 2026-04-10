@@ -1,0 +1,9 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/dibyanshu/Downloads/Communication_Networks_Lab/Practice/Expt_01/main1'
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _addEdge, symObjAddr: 0x0, symBinAddr: 0x100003D04, symSize: 0xD4 }
+  - { offsetInCU: 0x41, offset: 0x41, size: 0x8, addend: 0x0, symName: _addEdge, symObjAddr: 0x0, symBinAddr: 0x100003D04, symSize: 0xD4 }
+  - { offsetInCU: 0x8F, offset: 0x8F, size: 0x8, addend: 0x0, symName: _displayMatrix, symObjAddr: 0xD4, symBinAddr: 0x100003DD8, symSize: 0xBC }
+  - { offsetInCU: 0xEB, offset: 0xEB, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x190, symBinAddr: 0x100003E94, symSize: 0xDC }
+...
