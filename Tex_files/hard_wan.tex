@@ -1,0 +1,293 @@
+\documentclass[a4paper,12pt]{article}
+
+% Packages
+\usepackage{float}
+\usepackage{graphicx}   % for including images
+\usepackage{setspace}   % for line spacing
+\usepackage{geometry}   % for page margins
+\usepackage{titling}    % for title customization
+\usepackage{lipsum}     % for dummy text (can be removed)
+\usepackage{newtxtext,newtxmath} % Times New Roman
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{calc} 
+\usepackage{graphicx} % for including images
+\usepackage{caption}  % optional, for better captions
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{%
+  language=Matlab,                % set language to MATLAB
+  basicstyle=\ttfamily\footnotesize, % code font
+  keywordstyle=\color{blue},      % keywords in blue
+  stringstyle=\color{red},        % strings in red
+  commentstyle=\color{green!50!black}, % comments in green
+  numbers=left,                   % line numbers on the left
+  numberstyle=\tiny\color{gray},  % style of numbers
+  frame=single,                   % box around the code
+  breaklines=true,                % wrap long lines
+  tabsize=4                       % tab size
+}
+
+% Page setup
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+\begin{document}
+
+% Title Section
+\begin{center}
+    \large \textbf{EXPERIMENT (Hardware) -- Study on WANs using routers}
+    \rule{\linewidth}{1pt}
+\end{center}
+
+\vspace{3cm} % space before logo
+\begin{center}
+    \includegraphics[width=0.3\textwidth]{FrontPage/kgplogo.png} 
+\end{center}
+\vspace{2cm}
+\begin{center}
+    \textbf{\textit{Name: Dibyanshu Shekhar Dey}} \\
+    \textbf{\textit{Roll Number: 25EC64R23}} \\
+    \vspace{1cm}
+    
+\end{center}
+
+\vfill % push bottom text to bottom of page
+
+\begin{center}
+    \rule{13cm}{1pt}\\
+    \textbf{Design and Simulation Lab: Communication Networks} \\
+    Department of Electronics \& Electrical Communication Engineering \\
+    Indian Institute of Technology Kharagpur
+    \rule{13cm}{1pt}
+\end{center}
+\rule{\textwidth}{2pt}
+
+\newpage
+%Start of the experiment
+\noindent
+\textbf{AIM:} \\
+\begin{itemize}
+    \item Demonstration and performance measurement of routing protocols in WANs - OSPF, RIP, EIGRP.
+    \item WAN realisation using two routers and performance measurement on HDLC and PPP protocols.
+\end{itemize}
+
+\noindent
+\rule{\textwidth}{2pt}
+\noindent
+\textbf{INTRODUCTION: }
+\noindent
+Computer networks depend on both routing protocols and data-link protocols to enable reliable communication between devices. Routing protocols are responsible for selecting the best path for packet transmission across networks, whereas data-link protocols handle framing, error detection, and link management between directly connected nodes.\\
+
+\noindent
+Routing algorithms are generally classified into two main types: Distance Vector and Link State routing. In distance vector routing, routers share information about network distances with their neighbors and progressively build routing tables. In contrast, link state routing involves each router maintaining a complete view of the network topology and computing the shortest paths using graph-based algorithms.\\
+
+\noindent
+Several widely used protocols in networking include RIP, OSPF, EIGRP, HDLC, and PPP. Each of these protocols is designed with specific mechanisms to balance efficiency, scalability, and reliability in data communication systems.\\
+\noindent
+\textbf{THEORY: }
+
+\noindent
+\textbf{OSPF:} Open Shortest Path First (OSPF) is a link-state Interior Gateway Protocol (IGP) developed by the Internet Engineering Task Force (IETF) for efficient routing within an Autonomous System. It uses Dijkstra’s Shortest Path First (SPF) algorithm to compute the optimal path to each destination, ensuring a loop-free network topology and fast convergence \cite{gfg_ospf_fundamentals}.\\
+
+\noindent
+OSPF offers several advantages, including supporting both IPv4 and IPv6, and the ability to perform load balancing across equal-cost paths. It is a classless protocol that supports VLSM and CIDR, enabling efficient IP address utilization. Also, OSPF uses triggered updates rather than periodic ones, which improves convergence speed and reduces unnecessary network traffic \cite{gfg_ospf_fundamentals}.\\
+
+\noindent
+OSPF also has some drawbacks. Firstly, it requires higher CPU and memory resources because of SPF calculations, making it more resource-intensive than simpler protocols like RIP. Its configuration is comparatively complex and demands careful planning, especially in designing consistent and efficient area structures \cite{gfg_ospf_fundamentals}.\\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Theory/OSPF.drawio.png}
+    \caption{OSPF Architechture \cite{gfg_ospf_fundamentals}}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{RIP:} The Routing Information Protocol (RIP) is a distance-vector routing protocol which is used to determine the best path for forwarding data packets in a network. It operates at the Network Layer (Layer 3) of the OSI model and uses hop count as its routing metric, where each router along the path increments the count by one. Because of its simplicity and limited scalability, RIP is mainly suited for small to medium-sized networks \cite{gfg_rip_protocol}.\\
+
+\noindent
+It maintains routing tables on each router and exchanges routing information periodically with neighboring routers. Every 30 seconds, routers share their entire routing tables using broadcasts in RIPv1 or multicasts in RIPv2 and RIPng. It follows the principle of “routing by rumor,” relying on information from neighbors, and employs mechanisms like route poisoning and split horizon to prevent routing loops \cite{gfg_rip_protocol}.\\
+
+\noindent
+In operation, each router continuously updates its routing table based on received information, selecting routes with the lowest hop count. If a better (shorter) path is discovered, the routing table is updated accordingly. RIP also uses timers to maintain accuracy: routes not updated within 180 seconds are marked invalid, and those unused for 240 seconds are removed, ensuring outdated routes do not persist in the network \cite{gfg_rip_protocol}.\\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Theory/RIP.drawio.png}
+    \caption{RIP Architechture \cite{uninets_rip_protocol}}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{EIGRP: } Enhanced Interior Gateway Routing Protocol (EIGRP) is a proprietary routing protocol developed by Cisco Systems. It is primarily classified as a distance-vector protocol, though it incorporates features that improve efficiency and decision-making when determining the best path to a destination network \cite{attouchi_eigrp_protocol}.\\
+
+\noindent
+EIGRP is designed for high performance in large enterprise networks, offering scalability, stability, and efficient bandwidth utilization. It supports multiple network protocols such as IPv4, IPv6, and AppleTalk, and allows configuration of multiple routing domains within a single network \cite{attouchi_eigrp_protocol}.\\
+
+\noindent
+A key advantage of EIGRP is its fast convergence, enabling quick adaptation to network changes. Due to its efficiency and reliability, it is often used as an alternative to OSPF in large-scale enterprise environments \cite{attouchi_eigrp_protocol}.\\
+
+\noindent
+\textbf{HDLC: } High-Level Data Link Control (HDLC) is a data link layer communication protocol that is standardized by the International Organization for Standardization (ISO) under ISO/IEC 13239:2002. It is used for reliable data transmission between devices in telecommunication and networking systems \cite{wikipedia_hdlc}.\\
+
+\noindent
+It ensures accurate and efficient data transfer by enabling devices to correctly interpret transmitted data. It is versatile and can function with or without a continuous connection, making it suitable for different network configurations \cite{wikipedia_hdlc}.\\
+
+\noindent
+Initially designed for multi-device networks with master-slave communication modes such as Normal Response Mode (NRM) and Asynchronous Response Mode (ARM), HDLC is now mainly used in point-to-point links. The commonly used mode today is Asynchronous Balanced Mode (ABM), which allows two devices to communicate as equals, such as in router-to-router connections \cite{wikipedia_hdlc}.\\
+
+\noindent
+\textbf{PPP :} Point-to-Point Protocol (PPP) is a Data Link Layer protocol used to encapsulate and transmit network layer data over point-to-point communication links, including both synchronous and asynchronous connections. It was originally designed to carry multiple types of network traffic. PPP has replaced older protocols like SLIP and supports various network protocols such as TCP/IP, IPX/SPX, and DECnet. It also includes features like session negotiation, data compression, and multiplexing of different protocols \cite{gfg_ppp_full_form}. \\
+
+\noindent
+It provides several key functionalities, including packet framing to structure data, multi-protocol support for handling different network layer protocols, bit transparency to allow any data pattern, and error detection for reliable communication. These features make PPP flexible and suitable for diverse networking environments \cite{gfg_ppp_full_form}. \\
+
+\noindent
+The protocol offers advantages such as support for multiple protocols, built-in error detection, authentication for secure connections, and data compression to improve transmission efficiency. However, it also has drawbacks, including additional overhead due to encapsulation, limitation to point-to-point connections, and relatively complex configuration and management compared to simpler protocols like Ethernet \cite{gfg_ppp_full_form}. \\
+\noindent
+\textbf{RESULTS:}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/File transfer path through ospf 1.jpeg}
+    \caption{File transfer path through ospf 1}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/File transfer path through ospf 2.jpeg}
+    \caption{File transfer path through ospf 2}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/File transfer ppp.jpeg}
+    \caption{File transfer ppp}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/File transfer through Eigp and routine table 1.jpeg}
+    \caption{File transfer through Eigp and routine table 1}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/File transfer through Eigp and routine table 2.jpeg}
+    \caption{File transfer through Eigp and routine table 2}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/File transfer through RIP 1.jpeg}
+    \caption{File transfer through RIP 1}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/File transfer through RIP 2.jpeg}
+    \caption{File transfer through RIP 2}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/Hdlc command.jpeg}
+    \caption{HDLC Commands}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/Hdlc file transfer.jpeg}
+    \caption{Hdlc file transfer}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/Hdlc rtt one ping by system C.jpeg}
+    \caption{Hdlc rtt one ping by system C}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/Higher bytes through ospf 1.jpeg}
+    \caption{Higher bytes through ospf 1}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/Higher bytes through ospf 2.jpeg}
+    \caption{Higher bytes through ospf 2}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/Ospf path after altering the bw between A to B.jpeg}
+    \caption{Ospf path after altering the bw between A to B.jpeg bytes through ospf 2}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/Ppp encapsulation sys a.jpeg}
+    \caption{Ppp encapsulation sys a.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/Ppp encapsulation sys c.jpeg }
+    \caption{Ppp encapsulation sys c}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/Ppp rtt system C both pinging.jpeg}
+    \caption{Ppp rtt system C both pinging}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/Routing table in rip protocol.jpeg}
+    \caption{Routing table in rip protocol}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{DISCUSSION:}\\
+\noindent
+The experiment focuses on analyzing how bandwidth (BW) and traffic load affect routing protocols (RIP, OSPF, EIGRP) and WAN encapsulation protocols (HDLC, PPP).\\
+
+\noindent
+From the observations, RIP selects routes purely based on hop count, so it continued to use the indirect path (A → C → B) even when a faster direct link (A → B) was available. Because of this limitation, increasing bandwidth did not significantly improve its performance. On the other hand, OSPF takes bandwidth into account, so when the direct link’s bandwidth increased, it switched to that path and achieved better throughput. EIGRP considers both bandwidth and delay using a composite metric and can utilize multiple efficient paths, which makes it more flexible and overall the best-performing among the three.\\
+
+\noindent
+In terms of encapsulation, increasing traffic load or packet size led to higher delay and reduced throughput. For example, FTP throughput dropped from around 237 KB/s to about 118 KB/s under heavy traffic due to increased transmission and queuing delays. HDLC is simple and works efficiently for point-to-point links, while PPP provides additional features such as negotiation and authentication, but at the cost of slightly higher overhead.\\
+
+\noindent
+\textbf{ACKNOWLEDGEMENT: }\\
+I would like to share my thanks to Prof. Amitalok J Budkuley for explaining the context of the algorithms. I would like to extend my thanks to TAs in Communication Networks Lab for explaining the
+fundamentals of the experiment with great presentation and simulations,  and helping throughout along with the problem description. I
+would like to thank my colleagues Mayank Singh and Saptarshi Bhattacharjee for collaborating in lab throughout the experiment.
+\noindent
+\printbibliography
+
+\end{document}

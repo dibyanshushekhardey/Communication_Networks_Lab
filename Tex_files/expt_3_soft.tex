@@ -1,0 +1,438 @@
+\documentclass[a4paper,12pt]{article}
+
+% Packages
+\usepackage{float}
+\usepackage{graphicx}   % for including images
+\usepackage{setspace}   % for line spacing
+\usepackage{geometry}   % for page margins
+\usepackage{titling}    % for title customization
+\usepackage{lipsum}     % for dummy text (can be removed)
+\usepackage{newtxtext,newtxmath} % Times New Roman
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{calc} 
+\usepackage{graphicx} % for including images
+\usepackage{caption}  % optional, for better captions
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{%
+  language=Matlab,                % set language to MATLAB
+  basicstyle=\ttfamily\footnotesize, % code font
+  keywordstyle=\color{blue},      % keywords in blue
+  stringstyle=\color{red},        % strings in red
+  commentstyle=\color{green!50!black}, % comments in green
+  numbers=left,                   % line numbers on the left
+  numberstyle=\tiny\color{gray},  % style of numbers
+  frame=single,                   % box around the code
+  breaklines=true,                % wrap long lines
+  tabsize=4                       % tab size
+}
+
+% Page setup
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+\begin{document}
+
+% Title Section
+\begin{center}
+    \large \textbf{EXPERIMENT NO. 03-- Simulation and Performance Analysis of a Poisson Arrival–Poisson Service Queue with Finite Buffer}
+    \rule{\linewidth}{1pt}
+\end{center}
+
+\vspace{3cm} % space before logo
+\begin{center}
+    \includegraphics[width=0.3\textwidth]{FrontPage/kgplogo.png} 
+\end{center}
+\vspace{2cm}
+\begin{center}
+    \textbf{\textit{Name: Dibyanshu Shekhar Dey}} \\
+    \textbf{\textit{Roll Number: 25EC64R23}} \\
+    \vspace{1cm}
+    
+\end{center}
+
+\vfill % push bottom text to bottom of page
+
+\begin{center}
+    \rule{13cm}{1pt}\\
+    \textbf{Design and Simulation Lab: Communication Networks} \\
+    Department of Electronics \& Electrical Communication Engineering \\
+    Indian Institute of Technology Kharagpur
+    \rule{13cm}{1pt}
+\end{center}
+\rule{\textwidth}{2pt}
+
+\newpage
+%Start of the experiment
+\noindent
+\textbf{AIM:} To simulate a communication system with Poisson packet arrivals and Poisson service times by implementing a finite buffer and evaluate the system performance by evaluating the packet drop probability. \\
+\noindent
+\rule{\textwidth}{2pt}
+\noindent
+\textbf{INTRODUCTION: }\\
+\noindent
+In networks, queueing systems are used to analyse the network performance. In networks, packets arrive randomly, they are of random length. The main focus therefore shifts to delay related performance of the packets i.e- how long the packets would wait for and how much longer the buffer will be for the packets. This experiment tries to formulate a simulation so that the randomness can be captured for a network.\\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Introduction/buffer.drawio.png}
+    \caption{Buffer and Serving Process}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{THEORY: }\\
+\noindent
+The arrival process is modeled with Poisson process, which is a random process. In a Poisson process, the arrivals occur at an average rate of $\lambda$ packets per second \cite{ModianoQueueingMIT}. The probability of observing $n$ arrivals in a time period $T$ is given by \\
+\[
+            P(N(T) = n) = \frac{(\lambda T)^n e^{-\lambda T}}{n!}
+\]
+
+\noindent
+The main idea in this experiment is to model the arrival process and service process based on Poisson process,. To do so, we use exponential random variable and the concept of inter arrival time. Inter arrival time denotes the time between two successive arrivals \cite{ModianoQueueingMIT}. Following is the CDF of inter arrival time: \\
+
+\begin{align*}
+    P(\text{IA} \le t) 
+    &= 1 - P(\text{IA} > t) \\
+    &= 1 - P(\text{0 arrivals in time } t) \\
+    &= 1 - e^{-\lambda t}
+\end{align*}
+\noindent
+The distribution is known as the \textbf{exponential distribution}. \\
+
+\noindent
+So. inter-arrival CDF:
+        \[
+            F_{\text{IA}}(t) = 1 - e^{-\lambda t}
+        \]
+
+\noindent
+And inter-arrival PDF:
+        \[
+            f_{\text{IA}}(t) = \frac{d}{dt}F_{\text{IA}}(t) = \lambda e^{-\lambda t}
+        \]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Theory/exponentialDistribution.png}
+    \caption{Inter arrival Process Example (Arrival of N people in between $t$ time interval) \cite{ChanECE302ExpRV}}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{Derivation of the Inter-arrival Time Distribution}
+\noindent
+Let $T$ denote the inter-arrival time between two consecutive events in a Poisson process with rate $\lambda$. Let $t$ be the time period under observation \cite{ChanECE302ExpRV}.
+
+\begin{align*}
+\mathbb{P}(T > t)
+&\stackrel{(a)}{=} \mathbb{P}(\text{inter-arrival time} > t) \\
+&\stackrel{(b)}{=} \mathbb{P}(\text{no arrivals in time } t) \\
+&\stackrel{(c)}{=} \mathbb{P}(N(t) = 0) \\
+&= \frac{(\lambda t)^0}{0!} e^{-\lambda t} \\
+&= e^{-\lambda t}.
+\end{align*}
+\noindent
+Therefore, the cumulative distribution function (CDF) of the inter-arrival time is
+\[
+F_{\text{IA}}(t) = \mathbb{P}(T \le t) = 1 - e^{-\lambda t}, \quad t \ge 0.
+\]
+\noindent
+Differentiating the CDF yields the probability density function (PDF):
+\[
+f_{\text{IA}}(t) = \frac{d}{dt}F_{\text{IA}}(t) = \lambda e^{-\lambda t}, \quad t \ge 0.
+\]
+\noindent
+Hence, the inter-arrival time $T = {\text{IA}}$ follows an exponential distribution with parameter $\lambda$.\\
+
+\noindent
+\textbf{RESULTS:}
+\begin{verbatim}
+Simulation Time           : 10.00
+Arrival rate (lambda)     : 10.00
+Service rate (mu)         : 13.00
+Buffer size (K)           : 5
+----------------------------------
+Total Arrivals            : 96
+Total Serviced            : 83
+Total Dropped             : 8
+Packet Drop Probability   : 0.083333
+----------------------------------
+Storing Interaarival Times
+Inter-arrival[1] = 0.143
+Inter-arrival[2] = 0.143
+Inter-arrival[3] = 0.119
+Inter-arrival[4] = 0.046
+Inter-arrival[5] = 0.123
+Inter-arrival[6] = 0.020
+Inter-arrival[7] = 0.142
+Inter-arrival[8] = 0.172
+Inter-arrival[9] = 0.214
+Inter-arrival[10] = 0.161
+Inter-arrival[11] = 0.011
+Inter-arrival[12] = 0.038
+Inter-arrival[13] = 0.312
+Inter-arrival[14] = 0.138
+Inter-arrival[15] = 0.031
+Inter-arrival[16] = 0.207
+Inter-arrival[17] = 0.023
+Inter-arrival[18] = 0.189
+Inter-arrival[19] = 0.101
+Inter-arrival[20] = 0.122
+Inter-arrival[21] = 0.347
+Inter-arrival[22] = 0.097
+Inter-arrival[23] = 0.009
+Inter-arrival[24] = 0.111
+Inter-arrival[25] = 0.350
+Inter-arrival[26] = 0.031
+Inter-arrival[27] = 0.010
+Inter-arrival[28] = 0.250
+Inter-arrival[29] = 0.023
+Inter-arrival[30] = 0.045
+Inter-arrival[31] = 0.013
+Inter-arrival[32] = 0.025
+Inter-arrival[33] = 0.043
+Inter-arrival[34] = 0.519
+Inter-arrival[35] = 0.136
+Inter-arrival[36] = 0.011
+Inter-arrival[37] = 0.069
+Inter-arrival[38] = 0.055
+Inter-arrival[39] = 0.069
+Inter-arrival[40] = 0.015
+Inter-arrival[41] = 0.015
+Inter-arrival[42] = 0.188
+Inter-arrival[43] = 0.035
+Inter-arrival[44] = 0.009
+Inter-arrival[45] = 0.006
+Inter-arrival[46] = 0.003
+Inter-arrival[47] = 0.012
+Inter-arrival[48] = 0.017
+Inter-arrival[49] = 0.193
+Inter-arrival[50] = 0.033
+Inter-arrival[51] = 0.021
+Inter-arrival[52] = 0.398
+Inter-arrival[53] = 0.141
+Inter-arrival[54] = 0.237
+Inter-arrival[55] = 0.191
+Inter-arrival[56] = 0.015
+Inter-arrival[57] = 0.216
+Inter-arrival[58] = 0.068
+Inter-arrival[59] = 0.227
+Inter-arrival[60] = 0.036
+Inter-arrival[61] = 0.082
+Inter-arrival[62] = 0.054
+Inter-arrival[63] = 0.075
+Inter-arrival[64] = 0.013
+Inter-arrival[65] = 0.186
+Inter-arrival[66] = 0.043
+Inter-arrival[67] = 0.274
+Inter-arrival[68] = 0.000
+Inter-arrival[69] = 0.021
+Inter-arrival[70] = 0.156
+Inter-arrival[71] = 0.050
+Inter-arrival[72] = 0.013
+Inter-arrival[73] = 0.367
+Inter-arrival[74] = 0.030
+Inter-arrival[75] = 0.015
+Inter-arrival[76] = 0.179
+Inter-arrival[77] = 0.041
+Inter-arrival[78] = 0.145
+Inter-arrival[79] = 0.081
+Inter-arrival[80] = 0.229
+Inter-arrival[81] = 0.079
+Inter-arrival[82] = 0.039
+Inter-arrival[83] = 0.116
+Inter-arrival[84] = 0.006
+Inter-arrival[85] = 0.132
+Inter-arrival[86] = 0.001
+Inter-arrival[87] = 0.012
+Inter-arrival[88] = 0.029
+Inter-arrival[89] = 0.104
+Inter-arrival[90] = 0.070
+Inter-arrival[91] = 0.205
+Inter-arrival[92] = 0.011
+Inter-arrival[93] = 0.023
+Inter-arrival[94] = 0.062
+Inter-arrival[95] = 0.243
+95
+The expected value of interaarival time is 0.10
+Inter-arrival times written to inter_arrival.txt
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/InterarrivalPicture.png}
+    \caption{Inter arrival Time Modelling}
+    \label{fig:placeholder}
+\end{figure}
+\noindent
+\textbf{DISCUSSION:}\\
+\noindent
+The experiment helped in demonstrating that a Poisson arrival process produces exponentially distributed inter-arrival times. The simulated mean inter-arrival time closely matched the calculated theoretical value of $1/\lambda$, therefore validating the model. Due to randomness, some deviations were observed. The histogram of inter-arrival times showed the expected exponential distribution which is right skewed. \\
+
+\noindent
+\textbf{ACKNOWLEDGEMENT: }\\
+I would like to share my thanks to Prof. Amitalok J Budkuley for explaining the context of the algorithms. I would like to extend my thanks to TAs Anuj Meena and Prince for questioning the fundamentals of the experiment and helping throughout along with the problem description. I would like to thank my colleagues Mayank Singh, Saptarshi Bhattacharjee and Soumava Biswas for collaborating in lab throughout the experiment. \\
+
+\noindent
+\printbibliography
+
+\noindent
+\textbf{APPENDIX (CODE): }\\
+\appendix
+\noindent
+\textbf{Djikstra's Algorithm in C}
+
+\begin{lstlisting}
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+
+#define MAX_EVENTS 1000
+float inter_arrival[MAX_EVENTS];
+int ia_idx = 0;
+// generating exponential RV
+float exponential(float rate) {
+    float u = (float)rand() / RAND_MAX;
+    return -log(1.0 - u) / rate;
+}
+
+float expectation(float arr[], int n){
+    
+    float sum_ia = 0.0;
+    for(int i = 0; i < n; i++){
+        sum_ia += arr[i];
+    }
+    return sum_ia / n; 
+
+}
+int main() {
+
+    srand(time(NULL));
+
+    // parameters
+    float lambda = 10.0;     // arrival rate
+    float mu = 13.0;         // service rate
+    int K = 5;               // finite buffer size
+    float SIM_TIME = 10.0;  // total simulation time
+
+    // variables
+    int buffer = 0;
+    int arrivals = 0;
+    int dropped = 0;
+    int serviced = 0;
+
+    // event times
+    float t = 0.0;
+    float next_arrival = exponential(lambda);
+    float next_service = INFINITY;
+    float arrival_time[MAX_EVENTS];
+    //float inter_arrival[1000];
+    int arr_idx = 0;
+    //int ia_idx = 0;
+
+    // loop being less than the total simulation timew
+    while (t < SIM_TIME) {
+
+        if (next_arrival < next_service) {
+            // arrival process
+            t = next_arrival;
+            arrival_time[arr_idx++] = t;
+            arrivals++;
+
+            if (buffer < K) {
+                buffer++;
+
+                //If server is idle, schedule service 
+                if (buffer == 1) {
+                    next_service = t + exponential(mu);
+                }
+            } else {
+                dropped++;
+            }
+
+            next_arrival = t + exponential(lambda);
+
+        } else {
+            // service
+            t = next_service;
+
+            if (buffer > 0) {
+                buffer--;
+                serviced++;
+            }
+
+            if (buffer > 0) {
+                next_service = t + exponential(mu);
+            } else {
+                next_service = INFINITY;
+            }
+        }
+        //printf("Event Time next arrival : %0.2f\n", t);
+        //printf("----------------------------------\n");
+    }
+
+    
+
+    // result
+    printf("Simulation Time           : %.2f\n", SIM_TIME);
+    printf("Arrival rate (lambda)     : %.2f\n", lambda);
+    printf("Service rate (mu)         : %.2f\n", mu);
+    printf("Buffer size (K)           : %d\n", K);
+    printf("----------------------------------\n");
+    printf("Total Arrivals            : %d\n", arrivals);
+    printf("Total Serviced            : %d\n", serviced);
+    printf("Total Dropped             : %d\n", dropped);
+    printf("Packet Drop Probability   : %f\n", (float)dropped / arrivals);
+    printf("----------------------------------\n");
+    
+    
+    printf("Storing Interaarival Times\n");
+    for (int i = 1; i < arr_idx; i++) 
+    {   
+        inter_arrival[ia_idx] = arrival_time[i] - arrival_time[i-1];
+        printf("Inter-arrival[%d] = %.3f\n", i, inter_arrival[ia_idx]);
+        ia_idx++;
+    }
+    printf("%d\n", ia_idx);
+    float expected_value = expectation(inter_arrival, ia_idx);
+    printf("The expected value of interaarival time is %0.2f\n", expected_value);
+
+    FILE *fp = fopen("inter_arrival.txt", "w");
+
+    if (fp == NULL) {
+        printf("Error opening file!\n");
+        return 1;
+    }
+
+    for (int i = 0; i < ia_idx; i++) {
+        fprintf(fp, "%.6f\n", inter_arrival[i]);
+    }
+
+    fclose(fp);
+
+    printf("Inter-arrival times written to inter_arrival.txt\n");
+
+    return 0;
+}
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption=Python code for plotting the interarrival time]
+import numpy as np
+import matplotlib.pyplot as plt
+
+data = np.loadtxt("inter_arrival.txt")
+
+plt.hist(data, bins=50, density=True)
+t = np.linspace(0, max(data), 100)
+plt.plot(t, 10*np.exp(-10*t), 'r')
+plt.show()
+\end{lstlisting}
+\end{document}

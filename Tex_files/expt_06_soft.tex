@@ -1,0 +1,1066 @@
+\documentclass[a4paper,12pt]{article}
+
+% Packages
+\usepackage{float}
+\usepackage{graphicx}   % for including images
+\usepackage{setspace}   % for line spacing
+\usepackage{geometry}   % for page margins
+\usepackage{titling}    % for title customization
+\usepackage{lipsum}     % for dummy text (can be removed)
+\usepackage{newtxtext,newtxmath} % Times New Roman
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{calc} 
+\usepackage{graphicx} % for including images
+\usepackage{caption}  % optional, for better captions
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{%
+  language=Matlab,                % set language to MATLAB
+  basicstyle=\ttfamily\footnotesize, % code font
+  keywordstyle=\color{blue},      % keywords in blue
+  stringstyle=\color{red},        % strings in red
+  commentstyle=\color{green!50!black}, % comments in green
+  numbers=left,                   % line numbers on the left
+  numberstyle=\tiny\color{gray},  % style of numbers
+  frame=single,                   % box around the code
+  breaklines=true,                % wrap long lines
+  tabsize=4                       % tab size
+}
+
+% Page setup
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+\begin{document}
+
+% Title Section
+\begin{center}
+    \large \textbf{EXPERIMENT NO. 06 (Software) -- Exploring Principles of Congestion in TCP}
+    \rule{\linewidth}{1pt}
+\end{center}
+
+\vspace{3cm} % space before logo
+\begin{center}
+    \includegraphics[width=0.3\textwidth]{FrontPage/kgplogo.png} 
+\end{center}
+\vspace{2cm}
+\begin{center}
+    \textbf{\textit{Name: Dibyanshu Shekhar Dey}} \\
+    \textbf{\textit{Roll Number: 25EC64R23}} \\
+    \vspace{1cm}
+    
+\end{center}
+
+\vfill % push bottom text to bottom of page
+
+\begin{center}
+    \rule{13cm}{1pt}\\
+    \textbf{Design and Simulation Lab: Communication Networks} \\
+    Department of Electronics \& Electrical Communication Engineering \\
+    Indian Institute of Technology Kharagpur
+    \rule{13cm}{1pt}
+\end{center}
+\rule{\textwidth}{2pt}
+\newpage
+%Start of the experiment
+\noindent
+\textbf{AIM:} \\
+\begin{itemize}
+    \item Part I: Baseline Network Exploration
+    \item Part II: Congestion Control Design
+    \item Part III: MultiFlow congestion control
+    \item Part IV: (Challenge) From Congestion control to \textit{Congestion Avoidance}
+\end{itemize}
+\noindent
+\textbf{INTRODUCTION: }\\
+Congestion in network occurs when packet traffic exceeds link capacity, therefore causing packet loss and performance degradation. It is unavoidable, and therefore it is more easy to manage it using different and proper control mechanisms. A good congestion control must prevent overload, ensure fairness among the users, and utilize the bandwidth associated \cite{tcp_congestion_control}.\\
+
+\noindent
+\textbf{THEORY: }\\
+\noindent
+TCP congestion control helps in regulating the data transmission using a congestion window (cwnd) and feedback from the network to prevent overload. It consists of three phases: Slow Start (exponential growth), Congestion Avoidance (linear growth), and Congestion Detection (reducing rate and restarting or adjusting the phase) \cite{tcp_congestion_control}.\\
+
+\noindent
+AIMD (Additive Increase Multiplicative decrease) is a feedback control algorithm that is used in TCP, where the congestion window (cwnd) grows linearly when no congestion is detected and decreases sharply when congestion occurs (hence multiplicative decrease)\cite{gfg_tcp_congestion}. It combines additive increase and multiplicative decrease to regulate network traffic efficiently. The multiplicative decrease can be done by any factor (in most of the experiments / implementation it is taken as 2) \cite{gfg_aimd}.\\
+
+\noindent
+Some other algorithms include AIAD, MIMD and MIAD. (M = Multiplicative, I = Increase, A = Additive, D = Decrease) \cite{gfg_aimd}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth, height=10cm]{Theory/Additive_inc_transit.png}
+    \caption{Packets in transit during additive increase, with one packet being added each RTT \cite{peterson_davie}}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{algorithm}[H]
+\caption{Additive Increase Multiplicative Decrease (AIMD)}
+\begin{algorithmic}
+
+\STATE Initialize $cwnd = 1$
+\STATE Choose constant $K$
+\STATE Choose constant $K$
+
+\IF{loss\_event}
+    \STATE $cwnd = \frac{cwnd}{K'}$  % Multiplicative decrease
+\ELSE
+    \STATE $cwnd = cwnd + K$        % Additive increase
+\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
+
+\noindent
+The value of K in the above algorithm can be chosen based on the system performance. Also the AIAD, MIMD, MIAD algorithms can be used by just changing the if else conditions.\\
+
+\noindent
+\textbf{RESULTS:}\\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/task_a.png}
+    \caption{Part 1 Task A. The output of the code that was already in the lab report.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/task_b.png}
+    \caption{Part 1 Task B. Output based on different values of $\mu$ and $K$}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{Maximum and average of cwnd, queue and drops for different values of $\mu$ and $K$}
+\begin{verbatim}
+The max of the cwnd for 30 and 50 is 301
+The average of the queue for 30 and 50 is 44.0267
+The max of the queue for 30 and 50 is 50
+The average of the drops for 30 and 50 is 121.7467
+The max of the drops for 30 and 50 is 269
+The average of the cwnd for 30 and 100 is 151.5
+The max of the cwnd for 30 and 100 is 301
+The average of the queue for 30 and 100 is 87.1533
+The max of the queue for 30 and 100 is 100
+The average of the drops for 30 and 100 is 121.6533
+The max of the drops for 30 and 100 is 270
+The average of the cwnd for 30 and 200 is 151.5
+The max of the cwnd for 30 and 200 is 301
+The average of the queue for 30 and 200 is 171.93
+The max of the queue for 30 and 200 is 200
+The average of the drops for 30 and 200 is 121.3
+The max of the drops for 30 and 200 is 270
+The average of the cwnd for 50 and 50 is 151.5
+The max of the cwnd for 50 and 50 is 301
+The average of the queue for 50 and 50 is 40.81
+The max of the queue for 50 and 50 is 50
+The average of the drops for 50 and 50 is 104.4233
+The max of the drops for 50 and 50 is 250
+The average of the cwnd for 50 and 100 is 151.5
+The max of the cwnd for 50 and 100 is 301
+The average of the queue for 50 and 100 is 80.4033
+The max of the queue for 50 and 100 is 100
+The average of the drops for 50 and 100 is 104.2667
+The max of the drops for 50 and 100 is 251
+The average of the cwnd for 50 and 200 is 151.5
+The max of the cwnd for 50 and 200 is 301
+The average of the queue for 50 and 200 is 158.6767
+The max of the queue for 50 and 200 is 200
+The average of the drops for 50 and 200 is 103.9467
+The max of the drops for 50 and 200 is 250
+The average of the cwnd for 70 and 50 is 151.5
+The max of the cwnd for 70 and 50 is 301
+The average of the queue for 70 and 50 is 37.43
+The max of the queue for 70 and 50 is 50
+The average of the drops for 70 and 50 is 88.3767
+The max of the drops for 70 and 50 is 230
+The average of the cwnd for 70 and 100 is 151.5
+The max of the cwnd for 70 and 100 is 301
+The average of the queue for 70 and 100 is 73.76
+The max of the queue for 70 and 100 is 100
+The average of the drops for 70 and 100 is 88.18
+The max of the drops for 70 and 100 is 230
+The average of the cwnd for 70 and 200 is 151.5
+The max of the cwnd for 70 and 200 is 301
+The average of the queue for 70 and 200 is 145.1767
+The max of the queue for 70 and 200 is 200
+The average of the drops for 70 and 200 is 87.9067
+The max of the drops for 70 and 200 is 230
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/task_c.png}
+    \caption{Part 1 Task C Additive increase Zero Decrease, multiplicative increase multiplicative decrease (done in class)}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/task_d_a.png}
+    \caption{Part 2 Task D (a) Additive increase Additive decrease, Multiplicative increase, additive decrease}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/task_d_b.png}
+    \caption{Part 2 Task D (b) Additive increase Additive decrease, Multiplicative increase, additive decrease with threshold introduced.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/task_e.png}
+    \caption{Part 2 Task E Additive increase multiplicative decrease}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/task_f_a.png}
+    \caption{Part 3 Task F A - Two competing flow - done in the class/lab}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/task_f_b.png}
+    \caption{Part 3 Task F B Different schemes used for two competing flow.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{verbatim}
+Total packets drop: 
+   5.4935e+03
+
+Jain fairness index: 
+    0.7203
+
+Total packets drop: 
+   1.3436e+04
+
+Jain fairness index: 
+    0.7099
+
+Total packets drop: 
+   5.9228e+03
+
+Jain fairness index: 
+    0.6950
+
+Total packets drop: 
+  441.5000
+
+Jain fairness index: 
+    0.9966
+\end{verbatim}
+\noindent
+\textbf{DISCUSSION:}\\
+\textbf{Part 1}\\
+\noindent
+\textbf{Does the queue stabilize or keep growing? What does stability mean to you?}\\
+\noindent
+From the plots, it can be seen that the queue initially grows rapidly, then hits the buffer limit K and then stays there. After that, it remains constant (flat line). So the queue stabilizes at K, due to buffer limit. A system is stable if the queue remains bounded and does not grow indefinitely.\\
+
+\noindent
+\textbf{How does cwnd growth relate to queue behavior?}\\
+cwnd increases linearly (which is an uncontrolled growth). Queue is initially small, then grows rapidly and hits limit K. As cwnd increases, arrivals increase. When arrival rate is greater than service rate $\mu$, queue starts growing rapidly, and once full, extra packerts start dropping.\\
+
+\noindent
+\textbf{Is increasing the sending rate always beneficial?}\\
+Increasing sending rate is only beneficial up to the link capacity $\mu$. Past that, it leads to congestion, packet delay and loss.\\
+
+\noindent
+\textbf{How do random arrivals affect stability? Comment clearly.}\\
+Random arrivals make the queue and drops fluctuate instead of following smooth, predictable patterns (see the graph of the results Part 1 Task B). These small randomness causes perturbations, while high randomness can lead to sudden congestion spikes and instability. Overall, randomness makes the system more realistic but less predictable, sometimes delaying or abruptly triggering congestion.\\
+
+\noindent
+\textbf{Part 2}\\
+\noindent
+\textbf{Do you observe oscillatory behavior in cwnd?}\\
+Yes.\\
+
+\noindent
+\textbf{Why does cwnd increase slowly but decrease sharply?}\\
+cwnd increase slowly due to linear increase (additive) behavior, whereas the sharp decrease is due to multiplicative decrease, which reduces its value by half.\\
+
+\noindent
+\textbf{How does the queue behave now?}\\
+The queue no longer stays saturated and instead oscillates around the threshold  K. It follows a periodic pattern of linear increase, drop, and then it repeats. So overall, the system is dynamically stable with no persistent overflow and only intermittent drops.\\
+
+\noindent
+\textbf{Part 3}\\
+\noindent
+\textbf{Why does TCP exhibit sawtooth behavior?}\\
+This sawtooth behavior is due to Additive increase, multiplicative decrease procedure that has been used. Additive increase causes the graph to go linearly, where multiplicative decrease causes the graph to drop fast.\\
+
+\noindent
+\textbf{What role does packet loss play in stability and fairness?}\\
+Packet loss acts as a feedback for congestion i.e. it forces flows to reduce their sending rate, preventing overload which improves stability.\\
+
+\textbf{How do different backoff rules impact queue occupancy?}\\
+AIMD leads to smooth, stable behavior with the queue staying close to capacity without large fluctuations. MIMD, being more aggressive, causes sharp changes and significant fluctuations in the queue.\\
+
+\noindent
+\textbf{Future Work: } Part D.
+
+\noindent
+\textbf{ACKNOWLEDGEMENT: }\\
+I would like to share my thanks to Prof. Amitalok J Budkuley for giving an introudtion to congestion control in TCP and engaging in an interactive session for this lab. I would like to thank my colleagues Mayank Singh, Saptarshi Bhattacharjee and Soumyajit Adak for collaborating in lab throughout the experiment.\\
+
+\noindent
+\printbibliography
+
+\noindent
+\textbf{APPENDIX (CODE): }\\
+\appendix
+\noindent
+
+\noindent
+\textbf{Part 1}\\
+\textbf{\texttt{task\_a.m}}
+\begin{lstlisting}
+% TCP CONGESTION CONTROL LAB – STARTER CODE
+
+clear; clc; close all;
+
+T = 300;
+mu = 50;
+K = 100;
+
+cwnd = 1;
+q = 0;
+
+cwnd_trace = zeros(1,T);
+q_trace = zeros(1,T);
+drop_trace = zeros(1,T);
+
+for t = 1:T
+
+    arrivals = max(cwnd,0);
+
+    q = q + arrivals;
+
+    served = min(q, mu);
+    q = q - served;
+
+    if q > K
+        drops = q - K;
+        q = K;
+    else
+        drops = 0;
+    end
+
+    loss_event = (drops > 0);
+
+    % BASELINE (no congestion control)
+    cwnd = cwnd + 1;
+
+    cwnd = max(cwnd,1);
+    cwnd_trace(t) = cwnd;
+    q_trace(t) = q;
+    drop_trace(t) = drops;
+
+end
+
+figure;
+subplot(3,1,1); plot(cwnd_trace); title('cwnd');
+subplot(3,1,2); plot(q_trace); title('Queue');
+subplot(3,1,3); plot(drop_trace); title('Drops');
+\end{lstlisting}
+
+\noindent
+\textbf{Part 1}\\
+\textbf{\texttt{task\_b.m}}
+\begin{lstlisting}
+% TCP CONGESTION CONTROL LAB – STARTER CODE
+% Vary μ and K (e.g., μ = 30, 50, 70, K = 50, 100, 200). 
+% Observe changes in queue and drops. • 
+% Introduce slight randomness in arrivals: 
+% arrivals = max(cwnd + randi([−1,1]),0);
+% Record:
+% Maximum and average queue – 
+% Maximum and average drops – Maximum and average cwnd
+
+clear; clc; close all;
+
+T = 300;
+mu_vals = [30, 50, 70];
+K_vals = [50, 100, 200];
+
+figure;
+
+for i = 1:length(mu_vals)
+    for j = 1:length(K_vals)
+        mu = mu_vals(i);
+        K  = K_vals(j);
+
+        cwnd = 1;
+        q = 0;
+
+        cwnd_trace = zeros(1,T);
+        q_trace = zeros(1,T);
+        drop_trace = zeros(1,T);
+
+        for t = 1:T
+            arrivals = max(cwnd + randi([-1, 1]), 0);
+        
+            q = q + arrivals;
+        
+            served = min(q, mu);
+            q = q - served;
+        
+            if q > K
+                drops = q - K;
+                q = K;
+            else
+                drops = 0;
+            end
+        
+            loss_event = (drops > 0);
+        
+            % BASELINE (no congestion control)
+            cwnd = cwnd + 1;
+        
+            cwnd = max(cwnd,1);
+            cwnd_trace(t) = cwnd;
+            q_trace(t) = q;
+            drop_trace(t) = drops;
+        
+        end
+        % Plotting
+        subplot(3,1,1);
+        hold on;
+        plot(cwnd_trace, 'DisplayName', ['\mu=' num2str(mu) ', K=' num2str(K)]);
+        avg_cwnd = mean(cwnd_trace);
+        %disp('The average of the cwnd for ' + num2str(mu) + ' and ' + num2str(K) + ' is ' + num2str(avg_cwnd));
+        disp("The average of the cwnd for " + mu + " and " + K + " is " + avg_cwnd);
+        max_cwnd = max(cwnd_trace);
+        disp("The max of the cwnd for " + mu + " and " + K + " is " + max_cwnd);
+        
+        subplot(3,1,2);
+        hold on;
+        plot(q_trace, 'DisplayName', ['\mu=' num2str(mu) ', K=' num2str(K)]);
+        avg_queue = mean(q_trace);
+        disp("The average of the queue for " + mu + " and " + K + " is " + avg_queue);
+        max_queue = max(q_trace);
+        disp("The max of the queue for " + mu + " and " + K + " is " + max_queue);
+        
+        subplot(3,1,3);
+        hold on;
+        plot(drop_trace, 'DisplayName', ['\mu=' num2str(mu) ', K=' num2str(K)]);
+        avg_drop = mean(drop_trace);
+        disp("The average of the drops for " + mu + " and " + K + " is " + avg_drop);
+        max_drop = max(drop_trace);
+        disp("The max of the drops for " + mu + " and " + K + " is " + max_drop);
+    end
+end
+
+% title and legends
+subplot(3,1,1);title('cwnd');legend;
+subplot(3,1,2);title('Queue');legend;
+subplot(3,1,3);title('Drops');legend;\end{lstlisting}
+
+\noindent
+\textbf{Part 2}\\
+\textbf{\texttt{task\_c.m}}
+\begin{lstlisting}
+% TCP CONGESTION CONTROL LAB – STARTER CODE
+
+clear; clc; close all;
+
+T = 300;
+mu = 50;
+K = 100;
+
+algorithms = {'AIZD', 'MIMD'};
+
+
+
+
+
+for a = 1:length(algorithms)
+
+    algo = algorithms{a};
+    cwnd = 1;
+    q = 0;
+    
+    
+    cwnd_trace = zeros(1,T);
+    q_trace = zeros(1,T);
+    drop_trace = zeros(1,T);
+    
+    for t = 1:T
+    
+        arrivals = max(cwnd,0);
+    
+        q = q + arrivals;
+    
+        served = min(q, mu);
+        q = q - served;
+    
+        if q > K
+            drops = q - K;
+            q = K;
+        else
+            drops = 0;
+        end
+    
+        loss_event = (drops > 0);
+    
+        % Congestion control
+        switch algo
+                % task
+                case 'AIZD'
+                    if loss_event
+                        cwnd = 0;
+                    else
+                        cwnd = cwnd + 1;
+                    end
+    
+                % task
+                case 'MIMD'
+                    if loss_event
+                        cwnd = cwnd /2;
+                    else
+                        cwnd = cwnd * 2;
+                    end
+    
+         end
+    
+        cwnd = max(cwnd,1);
+        cwnd_trace(t) = cwnd;
+        q_trace(t) = q;
+        drop_trace(t) = drops;
+        
+    
+    end
+    %  Plotting 
+    subplot(3,1,1);
+    hold on;
+    plot(cwnd_trace, 'DisplayName', algo);
+
+    subplot(3,1,2);
+    hold on;
+    plot(q_trace, 'DisplayName', algo);
+
+    subplot(3,1,3);
+    hold on;
+    plot(drop_trace, 'DisplayName', algo);
+
+end
+
+%  Final Plot Formatting 
+subplot(3,1,1);
+title('cwnd (Threshold-based)');
+legend;
+
+subplot(3,1,2);
+title('Queue');
+legend;
+
+subplot(3,1,3);
+title('Drops');
+legend;
+\end{lstlisting}
+
+\noindent
+\textbf{Part 2}\\
+\textbf{\texttt{task\_d\_a.m}}
+\begin{lstlisting}
+% TCP CONGESTION CONTROL – Task D
+% clear; clc; close all;
+
+T = 300;
+mu = 50;
+K = 100;
+
+algorithms = {'AIAD', 'MIAD'};
+
+figure;
+
+for a = 1:length(algorithms)
+
+    algo = algorithms{a};
+
+    cwnd = 1;
+    q = 0;
+
+    cwnd_trace = zeros(1,T);
+    q_trace = zeros(1,T);
+    drop_trace = zeros(1,T);
+
+    for t = 1:T
+
+        arrivals = max(cwnd,0);
+        q = q + arrivals;
+
+        served = min(q, mu);
+        q = q - served;
+
+        if q > K
+            drops = q - K;
+            q = K;
+        else
+            drops = 0;
+        end
+
+        loss_event = (drops > 0);
+
+        %  Different Algorithms 
+        switch algo
+            % task
+            case 'AIAD'
+                if loss_event
+                    cwnd = cwnd - 1;
+                else
+                    cwnd = cwnd + 1;
+                end
+
+            % task
+            case 'MIAD'
+                if loss_event
+                    cwnd = cwnd - 1;
+                else
+                    cwnd = cwnd * 2;
+                end
+
+        end
+
+        cwnd = max(cwnd,1);
+        cwnd_trace(t) = cwnd;
+        q_trace(t) = q;
+        drop_trace(t) = drops;
+
+    end
+    %  Plotting 
+    subplot(3,1,1);
+    hold on;
+    plot(cwnd_trace, 'DisplayName', algo);
+
+    subplot(3,1,2);
+    hold on;
+    plot(q_trace, 'DisplayName', algo);
+
+    subplot(3,1,3);
+    hold on;
+    plot(drop_trace, 'DisplayName', algo);
+
+end
+
+% Plot Formatting
+subplot(3,1,1);
+title('cwnd');
+legend;
+
+subplot(3,1,2);
+title('Queue');
+legend;
+
+subplot(3,1,3);
+title('Drops');
+legend;
+\end{lstlisting}
+
+\noindent
+\textbf{Part 2}\\
+\textbf{\texttt{task\_d\_b.m}}
+\begin{lstlisting}
+% TCP CONGESTION CONTROL – THRESHOLD-BASED (ALL ALGORITHMS)
+
+clear; clc; close all;
+
+T = 300;
+mu = 50;
+K = 100;
+
+q_thresh = 0.7 * K;   % threshold (70% of buffer)
+
+algorithms = {'AIAD', 'MIAD'};
+
+figure;
+
+for a = 1:length(algorithms)
+
+    algo = algorithms{a};
+
+    cwnd = 1;
+    q = 0;
+
+    cwnd_trace = zeros(1,T);
+    q_trace = zeros(1,T);
+    drop_trace = zeros(1,T);
+
+    for t = 1:T
+
+        arrivals = max(cwnd,0);
+        q = q + arrivals;
+
+        served = min(q, mu);
+        q = q - served;
+
+        if q > K
+            drops = q - K;
+            q = K;
+        else
+            drops = 0;
+        end
+
+        %  Threshold-based event 
+        thresh_event = (q > q_thresh);
+
+        %  Algorithms using threshold 
+        switch algo
+
+            case 'AIAD'
+                if thresh_event
+                    cwnd = cwnd - 1;
+                else
+                    cwnd = cwnd + 1;
+                end
+
+            case 'MIAD'
+                if thresh_event
+                    cwnd = cwnd - 1;
+                else
+                    cwnd = cwnd * 1.2;
+                end
+
+        end
+
+        cwnd = max(cwnd,1);
+
+        cwnd_trace(t) = cwnd;
+        q_trace(t) = q;
+        drop_trace(t) = drops;
+
+    end
+
+    %  Plotting 
+    subplot(3,1,1);
+    hold on;
+    plot(cwnd_trace, 'DisplayName', algo);
+
+    subplot(3,1,2);
+    hold on;
+    plot(q_trace, 'DisplayName', algo);
+
+    subplot(3,1,3);
+    hold on;
+    plot(drop_trace, 'DisplayName', algo);
+
+end
+
+%  Final Plot Formatting 
+subplot(3,1,1);
+title('cwnd (Threshold-based)');
+legend;
+
+subplot(3,1,2);
+title('Queue');
+legend;
+
+subplot(3,1,3);
+title('Drops');
+legend;
+\end{lstlisting}
+
+\noindent
+\textbf{Part 2}\\
+\textbf{\texttt{task\_e.m}}
+\begin{lstlisting}
+% TCP CONGESTION CONTROL LAB – STARTER CODE
+
+clear; clc; close all;
+
+T = 300;
+mu = 50;
+K = 100;
+
+cwnd = 1;
+q = 0;
+
+cwnd_trace = zeros(1,T);
+q_trace = zeros(1,T);
+drop_trace = zeros(1,T);
+
+for t = 1:T
+
+    arrivals = max(cwnd,0);
+
+    q = q + arrivals;
+
+    served = min(q, mu);
+    q = q - served;
+
+    if q > K
+        drops = q - K;
+        q = K;
+    else
+        drops = 0;
+    end
+
+    loss_event = (drops > 0);
+
+    % BASELINE AIMD
+    if loss_event
+        cwnd = cwnd / 2;
+    else
+        cwnd = cwnd + 1;
+    end
+    cwnd_trace(t) = cwnd;
+    q_trace(t) = q;
+    drop_trace(t) = drops;
+
+end
+
+figure;
+subplot(3,1,1); plot(cwnd_trace); title('cwnd');
+subplot(3,1,2); plot(q_trace); title('Queue');
+subplot(3,1,3); plot(drop_trace); title('Drops');
+\end{lstlisting}
+
+\noindent
+\textbf{Part 3}\\
+\textbf{\texttt{task\_f\_a.m}}
+\begin{lstlisting}
+clear;
+clc;
+close all;
+
+T = 300; % number of time steps
+mu = 50; %  service rate
+K = 100; % buffer size
+
+%initialise congestion window
+cwnd1 = 1;
+cwnd2 = 1;
+q = 0;  % queue size
+ 
+cwnd1_trace = zeros(1, T);
+cwnd2_trace = zeros(1, T);
+q_trace =  zeros(1, T);
+drop_trace = zeros(1, T);
+
+for t = 1:T
+    arrivals1 = max(cwnd1,0);
+    arrivals2 = max(cwnd2,0);
+    total_arrivals = arrivals1 + arrivals2;
+    
+    q = q + total_arrivals;
+    
+    served = min(q, mu);
+    q = q - served;
+
+    if q > K
+        drops = q - K; % packets dropped
+        q = K;
+    else
+        drops = 0;
+    end
+    
+    % example of proportional drops based on contribution
+    if total_arrivals > 0
+        p1 = arrivals1 / total_arrivals;
+        p2 = arrivals2 / total_arrivals;
+    else
+        p1 = 0;
+        p2 = 0;
+    end
+
+    loss_event1 = (drops > 0) && (rand < p1);
+    loss_event2 = (drops > 0) && (rand < p2);
+
+    % baseline, no congestion control
+    if loss_event1
+        cwnd1 = max(1, cwnd1 - 1); 
+    else
+        cwnd1 = cwnd1 + 0.5; 
+    end
+
+    if loss_event2
+        cwnd2 = max(1, cwnd2 - 1);
+    else
+        cwnd2 = cwnd2 + 0.5;
+    end
+
+    cwnd1_trace(t) = cwnd1;
+    cwnd2_trace(t) = cwnd2;
+    q_trace(t) = q;
+    drop_trace(t) = drops;
+    
+end
+
+figure;
+plot(cwnd1_trace, 'r', 'LineWidth', 1.5); hold on ;
+plot(cwnd2_trace, 'b', 'LineWidth', 1.5); 
+xlabel('Time');
+ylabel('cwnd');
+title('Two flow congestion window evolution');
+legend('Flow 1', 'Flow 2');
+grid on;
+disp("Total packets drop: ");
+disp(sum(drop_trace));
+x1 = mean(cwnd1_trace);
+x2 = mean(cwnd2_trace);
+J = ((x1 + x2)^2)/(2*(x1^2 + x2^2));
+disp("Jain fairness index: ");
+disp(J);
+\end{lstlisting}
+
+\noindent
+\textbf{Part 3}\\
+\textbf{\texttt{task\_f\_b.m}}
+\begin{lstlisting}
+clear;
+clc;
+close all;
+
+T = 300; % number of time steps
+mu = 50; % service rate
+K = 100; % buffer size
+
+figure;
+
+for case_id = 1:4
+
+    % initialise congestion window
+    cwnd1 = 1;
+    cwnd2 = 1;
+    q = 0;
+
+    cwnd1_trace = zeros(1, T);
+    cwnd2_trace = zeros(1, T);
+    q_trace =  zeros(1, T);
+    drop_trace = zeros(1, T);
+
+    for t = 1:T
+
+        arrivals1 = max(cwnd1,0);
+        arrivals2 = max(cwnd2,0);
+        total_arrivals = arrivals1 + arrivals2;
+
+        q = q + total_arrivals;
+
+        served = min(q, mu);
+        q = q - served;
+
+        if q > K
+            drops = q - K;
+            q = K;
+        else
+            drops = 0;
+        end
+
+        % proportional drops
+        if total_arrivals > 0
+            p1 = arrivals1 / total_arrivals;
+            p2 = arrivals2 / total_arrivals;
+        else
+            p1 = 0;
+            p2 = 0;
+        end
+
+        loss_event1 = (drops > 0) && (rand < p1);
+        loss_event2 = (drops > 0) && (rand < p2);
+
+        %  SWITCH CASE 
+        switch case_id
+
+            % Case 1: cwnd1 = AIMD, cwnd2 = MIMD
+            case 1
+                % cwnd1 AIMD
+                if loss_event1
+                    cwnd1 = cwnd1 / 2;
+                else
+                    cwnd1 = cwnd1 + 1;
+                end
+
+                % cwnd2 MIMD
+                if loss_event2
+                    cwnd2 = cwnd2 / 2;
+                else
+                    cwnd2 = cwnd2 * 2;
+                end
+
+            % Case 2: cwnd1 AI (no decrease), cwnd2 AIMD
+            case 2
+                % cwnd1 additive increase only
+                cwnd1 = cwnd1 + 0.5;
+
+                % cwnd2 AIMD
+                if loss_event2
+                    cwnd2 = cwnd2 / 2;
+                else
+                    cwnd2 = cwnd2 + 1;
+                end
+
+            % Case 3: cwnd1 MIMD, cwnd2 AIMD
+            case 3
+                % cwnd1 MIMD
+                if loss_event1
+                    cwnd1 = cwnd1 / 2;
+                else
+                    cwnd1 = cwnd1 * 2;
+                end
+
+                % cwnd2 AIMD
+                if loss_event2
+                    cwnd2 = cwnd2 / 2;
+                else
+                    cwnd2 = cwnd2 + 1;
+                end
+            % Case 4: example given in the report
+            case 4
+                if loss_event1
+                    cwnd1 = max(1, cwnd1 - 1); 
+                else
+                    cwnd1 = cwnd1 + 0.5; 
+                end
+            
+                if loss_event2
+                    cwnd2 = max(1, cwnd2 - 1);
+                else
+                    cwnd2 = cwnd2 + 0.5;
+                end
+        end
+
+        cwnd1 = max(1, cwnd1);
+        cwnd2 = max(1, cwnd2);
+
+        cwnd1_trace(t) = cwnd1;
+        cwnd2_trace(t) = cwnd2;
+        q_trace(t) = q;
+        drop_trace(t) = drops;
+
+    end
+
+    %  PLOTTING 
+    subplot(4,1,case_id);
+    plot(cwnd1_trace, 'r', 'LineWidth', 1.5); hold on;
+    plot(cwnd2_trace, 'b', 'LineWidth', 1.5);
+
+    xlabel('Time');
+    ylabel('cwnd');
+    title(['Case ' num2str(case_id)]);
+    legend('Flow 1', 'Flow 2');
+    grid on;
+
+    disp("Total packets drop: ");
+    disp(sum(drop_trace));
+    x1 = mean(cwnd1_trace);
+    x2 = mean(cwnd2_trace);
+    J = ((x1 + x2)^2)/(2*(x1^2 + x2^2));
+    disp("Jain fairness index: ");
+    disp(J);
+
+end
+\end{lstlisting}
+
+\end{document}

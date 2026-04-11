@@ -1,0 +1,1010 @@
+\documentclass[a4paper,12pt]{article}
+
+% Packages
+\usepackage{float}
+\usepackage{graphicx}   % for including images
+\usepackage{setspace}   % for line spacing
+\usepackage{geometry}   % for page margins
+\usepackage{titling}    % for title customization
+\usepackage{lipsum}     % for dummy text (can be removed)
+\usepackage{newtxtext,newtxmath} % Times New Roman
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{calc} 
+\usepackage{graphicx} % for including images
+\usepackage{caption}  % optional, for better captions
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{%
+  language=Matlab,                % set language to MATLAB
+  basicstyle=\ttfamily\footnotesize, % code font
+  keywordstyle=\color{blue},      % keywords in blue
+  stringstyle=\color{red},        % strings in red
+  commentstyle=\color{green!50!black}, % comments in green
+  numbers=left,                   % line numbers on the left
+  numberstyle=\tiny\color{gray},  % style of numbers
+  frame=single,                   % box around the code
+  breaklines=true,                % wrap long lines
+  tabsize=4                       % tab size
+}
+
+% Page setup
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+\begin{document}
+
+% Title Section
+\begin{center}
+    \large \textbf{EXPERIMENT NO. 02-- Shortest Path Algorithms}
+    \rule{\linewidth}{1pt}
+\end{center}
+
+\vspace{3cm} % space before logo
+\begin{center}
+    \includegraphics[width=0.3\textwidth]{01_Logo/kgplogo.png} 
+\end{center}
+\vspace{2cm}
+\begin{center}
+    \textbf{\textit{Name: Dibyanshu Shekhar Dey}} \\
+    \textbf{\textit{Roll Number: 25EC64R23}} \\
+    \vspace{1cm}
+    
+\end{center}
+
+\vfill % push bottom text to bottom of page
+
+\begin{center}
+    \rule{13cm}{1pt}\\
+    \textbf{Design and Simulation Lab: Communication Networks} \\
+    Department of Electronics \& Electrical Communication Engineering \\
+    Indian Institute of Technology Kharagpur
+    \rule{13cm}{1pt}
+\end{center}
+\rule{\textwidth}{2pt}
+
+\newpage
+%Start of the experiment
+\noindent
+\textbf{AIM: } Explain for each of the following using formal description and example for each of them and compare them:  
+\begin{itemize}
+    \item Dijkstra's algorithm
+    \item Bellman Ford Algorithm
+    \item Floyd-Warshall algorithm
+\end{itemize}
+Puzzle : Explain the impact on Dijkstra Algorithm  if the edge of a graph is replaced and it is known beforehand which edge has been replaced.\\
+\rule{\textwidth}{2pt}
+\noindent
+\textbf{INTRODUCTION: }\\
+\noindent
+Graph algorithms play a fundamental role in computer science and engineering, with applications ranging from network routing and transportation systems to operating systems and communication networks. Among these, shortest path algorithms are used to determine the minimum-cost paths between vertices in a weighted graph, where costs may represent distance, time, or any other metric. Efficient computation of shortest paths becomes essential for solving real-world problems such as traffic navigation, packet routing, and resource optimization.\\
+
+\noindent
+This experiment focuses on the study and implementation of three classical shortest-path algorithms: Dijkstra’s algorithm, the Bellman--Ford algorithm, and the Floyd--Warshall algorithm.\\
+
+\noindent
+\textbf{THEORY: }\\
+\noindent
+\textbf{Dijkstra's Algorithm: }\\
+\noindent
+The Dijkstra algorithm is a classical greedy algorithm used to solve the single-source shortest-path problem on a weighted graph. Given a graph $G = (V, E)$ and a source vertex $s$, it computes the minimum-cost paths from $s$ to all other vertices of the graph. The algorithm assumes that all edge weights are nonnegative, i.e., $w(u,v) \ge 0$ for every edge $(u,v) \in E$, which guaranties correctness \cite{CLRS}. It is widely used in practical applications, such as network routing protocols \cite{thareja_dsa_c}.\\
+
+\noindent
+It maintains a set of vertices whose final shortest-path distances from the source have already been determined. At each step, it selects the unvisited vertex with the minimum tentative distance, adds it to the set of finalized vertices, and relaxes all outgoing edges from that vertex to update neighboring distances if a shorter path is found. This process continues until all vertices are processed \cite{bari_dijkstra_greedy}.
+
+% algorithm pseudocode
+\begin{algorithm}[H]
+\caption{Dijkstra's Algorithm for Shortest Path \cite{CLRS}}
+\begin{algorithmic}[1]
+\STATE Select the source vertex $s$
+\STATE Initialize the set $N \leftarrow \{s\}$
+\STATE Set distance $d[s] \leftarrow 0$
+\FOR{each vertex $v \neq s$}
+    \STATE Set distance $d[v] \leftarrow \infty$
+\ENDFOR
+\WHILE{there exist vertices $v \notin N$}
+    \STATE Select a vertex $u \notin N$ with minimum distance $d[u]$
+    \STATE Add vertex $u$ to $N$
+    \FOR{each vertex $v \notin N$ adjacent to $u$}
+        \IF{$d[u] + w(u,v) < d[v]$}
+            \STATE Set $d[v] \leftarrow d[u] + w(u,v)$
+        \ENDIF
+    \ENDFOR
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+\noindent
+\textbf{Algorithmic Progression for given graph used in the program: }//
+\noindent
+% Initial graph
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/InitalGrapghDjikstra.drawio.png}
+    \caption{Initial Graph (with edge weights and vertices)}
+    \label{fig:placeholder}
+\end{figure}
+
+%Step 01
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_01.drawio.png}
+    \caption{Initialize the graph at vertex $0$ }
+    \label{fig:placeholder}
+\end{figure}
+
+%step 02
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_02.drawio.png}
+    \caption{Now Algorithm searches for all the adjacent weights and relaxes the vertices with the edge weights (see Vertices $0, 4, 5$)}
+    \label{fig:placeholder}
+\end{figure}
+
+%step 03
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_03.drawio.png}
+    \caption{Now Algorithm selects the minimum weight (Vertex $1$ with weight $6$) and marks it.}
+    \label{fig:placeholder}
+\end{figure}
+
+% step 04
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_04.drawio.png}
+    \caption{Now algorithm takes the minimum weight in the list this time $6$ and searches for adjacent weights and updates if the distance is less (here it updates vertex $2$ with weight 15.}
+    \label{fig:placeholder}
+\end{figure}
+
+% step 05
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_05.drawio.png}
+    \caption{The algorithm has updated list with visited vertices and weights updated in the vertices.}
+    \label{fig:placeholder}
+\end{figure}
+
+%step 06
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_06.drawio.png}
+    \caption{Now algorithm takes the minimum weighted vertex and searches for the adjacent vertices to update the weights.}
+    \label{fig:placeholder}
+\end{figure}
+
+%step 07 a
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_07_a.drawio.png}
+    \caption{As there are no outgoing edges from the vertex $5$, the vertex is marked as visited and the weight is removed from the list.}
+    \label{fig:placeholder}
+\end{figure}
+
+%step 07 b
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_07_b.drawio.png}
+    \caption{Again algorithm takes the minimum weighted vertex (vertex $4$ with weight $8$}
+    \label{fig:placeholder}
+\end{figure}
+
+%step 07 c
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_07_c.drawio.png}
+    \caption{It searches for the adjacent vertices (here vertex $3$ and updates the weight from $Max$ to $11$.}
+    \label{fig:placeholder}
+\end{figure}
+
+%step 08
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_08.png}
+    \caption{The algorithm removes the minimum weight ans vertex and marks it as visited.}
+    \label{fig:placeholder}
+\end{figure}
+
+%step 09 a
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_09_a.drawio.png}
+    \caption{Vertex $3$ is checked (weights in the list) from vertex $4$ and updated. The algorithm checks the outgoing edges to check if the minimum distance is less than the updated vertices weights. If it is not then it is marked as visited and the weight is popped from the list to be updated. }
+\end{figure}
+
+%step 09 b
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_09_b.drawio.png}
+    \caption{Updated graph with weighed vertices. Only minimum weight left is $15$.}
+    \label{fig:placeholder}
+\end{figure}
+
+%step 10 a
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_10_a.drawio.png}
+    \caption{It is from vertex $1$ and then it is updated.}
+    \label{fig:placeholder}
+\end{figure}
+
+%step 10 b
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Step_10_b.drawio.png}
+    \caption{Final vertices with updated weights from the source vertex $0$.}
+    \label{fig:placeholder}
+\end{figure}
+
+% final 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/Dijkstra/Final_Graph_Dijkstra.drawio.png}
+    \caption{Final Graph }
+    \label{fig:placeholder}
+\end{figure}
+
+%% Bellman ford Algorithm
+\noindent
+\textbf{Bellman Ford's Algorithm: }\\
+\noindent
+The Bellman--Ford algorithm helps in solving the single-source shortest-paths problem in weighted directed graphs where edge weights may be negative. Unlike Dijkstra’s algorithm, it can correctly handle negative-weight edges, but it does not produce a valid shortest-path solution if a negative-weight cycle is reachable from the source (see the illustrated example), since traversing such a cycle can indefinitely reduce the path cost. The algorithm addresses this by not only computing shortest-path distances but also explicitly detecting the presence of negative-weight cycles and reporting when no finite solution exists\cite{CLRS}.\\
+
+\noindent
+The algorithm works by repeatedly relaxing all edges in the graph, progressively decreasing the estimated distance to each vertex. Specifically, it performs $|V|-1$ passes over all edges, where each pass allows shortest paths with one additional edge to be discovered \cite{CLRS, w3schools_bellmanford}. After these passes, a final scan of the edges is used to check whether any distance can still be reduced; if so, a negative-weight cycle exists. When the graph is represented using adjacency lists, the Bellman--Ford algorithm runs in $O(VE)$ time in typical cases, making it slower than Dijkstra’s algorithm for graphs with only non-negative weights, but essential when negative edges or cycle detection are required \cite{CLRS, bari_bellmanford}.\\
+
+\noindent
+\begin{algorithm}[H]
+\caption{Bellman--Ford Algorithm for Shortest Path \cite{CLRS}}
+\begin{algorithmic}[1]
+\STATE Select the source vertex $s$
+\STATE Set distance $d[s] \leftarrow 0$
+\FOR{each vertex $v \neq s$}
+    \STATE Set distance $d[v] \leftarrow \infty$
+\ENDFOR
+
+\FOR{$i = 1$ to $|V| - 1$}
+    \FOR{each edge $(u,v) \in E$}
+        \IF{$d[u] + w(u,v) < d[v]$}
+            \STATE Set $d[v] \leftarrow d[u] + w(u,v)$
+        \ENDIF
+    \ENDFOR
+\ENDFOR
+
+\FOR{each edge $(u,v) \in E$}
+    \IF{$d[u] + w(u,v) < d[v]$}
+        \STATE Report negative weight cycle
+        \STATE \textbf{EXIT}
+    \ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\noindent
+\textbf{Algorithmic progression of Bellman Ford Algorithm}\\
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Theory/InitialGraph.drawio.png}
+    \caption{Inital Graph}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Theory/Step_00.drawio.png}
+    \caption{Initialization  with vertex $0$}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Theory/Step_01.drawio.png}
+    \caption{First path traversal across the edges (directed paths) if $d[u] + w(u, v) < d[v]$, then $d[v]$ is updated (see \sout{MAX} updated)}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Theory/Step_02.drawio.png}
+    \caption{Second time path traversal.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Theory/Step_03.drawio.png}
+    \caption{Third time path traversal (Last as per the algorithm).}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Theory/Step_04.drawio.png}
+    \caption{A Hypothetical path traversal to check if further relaxation is possible.}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Theory/FinalGraph.drawio.png}
+    \caption{Final Graph}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\noindent
+\textbf{Drawback of Bellman-Ford}\\
+
+\noindent
+The following figures illustrates as why Bellman-Ford fails for negative cycles \cite{bari_bellmanford}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Drawback/InitialGraph.drawio.png}
+    \caption{An example graph to check the drawback of Bellman-Ford}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Drawback/Step_00.drawio.png}
+    \caption{Graph initialization with $0$ weight attached to vertex $0$ and all others $MAX$}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Drawback/Step_01.drawio.png}
+    \caption{First path traversal across all the edges and weight updation of the vertices as per the algorithm ($d[u] + w(u, v) < d[v]$, then $d[v]$ is updated)}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Drawback/Step_02.drawio.png}
+    \caption{Second path traversal}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Drawback/Step_03.drawio.png}
+    \caption{Third path traversal (Here the number of steps taken by the code as per algorithm is completed). However there might be more traversals.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Drawback/Step_04_furtherRelaxation.drawio.png}
+    \caption{On the fourth path traversal , the vertices $2$ , $4$, $3$ are further updated. And if the code continues without any check, there will be infinite possibilities.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/BellMan/Drawback/NegativeCycleBellman.drawio.png}
+    \caption{This happens because of the negative cycle taht forsm between $4$, $3$ and $2$.}
+    \label{fig:placeholder}
+\end{figure}
+
+%% Flloyd Warshal Algorithm 
+\noindent
+\textbf{Floyd Warshall Algorithm: }\\
+\noindent  
+Floyd--Warshall is a dynamic programming algorithm which is used to solve the all-pairs shortest-paths problem in a weighted directed graph. It computes the shortest distances between every pair of vertices by  allowing intermediate vertices in the paths one at a time. The algorithm runs in $\Theta(|V|^3)$ time and can handle graphs with negative-weight edges, given that no negative-weight cycles are present \cite{CLRS}. The core idea is to iteratively improve an initial distance matrix by checking whether a path from vertex $i$ to vertex $j$ can be lessened by passing through an intermediate vertex $k$ \cite{floyd_warshall_wikipedia}. \\ 
+
+\noindent
+The algorithm begins by constructing an initial distance matrix in which each entry represents the direct edge weight between two vertices, infinity (or a maximum weight associated) if no direct edge exists, and zero along the diagonal \cite{tutorialspoint_floyd_warshall}.\\
+\noindent
+Then, for each vertex chosen as an intermediate pivot, the algorithm updates all pairs of distances using the recurrence relation
+$d[i][j] = \min(d[i][j],\, d[i][k] + d[k][j])$. By repeating this process for all vertices as possible intermediates, the final matrix produced contains the shortest path distances between every pair of vertices in the graph \cite{CLRS, cp_algorithms_floyd_warshall}.\\
+
+\begin{algorithm}[H]
+\caption{Floyd--Warshall Algorithm\cite{CLRS}}
+\begin{algorithmic}[1]
+\STATE Let $\text{dist}$ be a $|V| \times |V|$ array initialized to $\infty$
+
+\FOR{each edge $(u,v)$}
+    \STATE $\text{dist}[u][v] \leftarrow w(u,v)$
+\ENDFOR
+
+\FOR{each vertex $v$}
+    \STATE $\text{dist}[v][v] \leftarrow 0$
+\ENDFOR
+
+\FOR{$k = 1$ to $|V|$}
+    \FOR{$i = 1$ to $|V|$}
+        \FOR{$j = 1$ to $|V|$}
+            \IF{$\text{dist}[i][j] > \text{dist}[i][k] + \text{dist}[k][j]$}
+                \STATE $\text{dist}[i][j] \leftarrow \text{dist}[i][k] + \text{dist}[k][j]$
+            \ENDIF
+        \ENDFOR
+    \ENDFOR
+\ENDFOR
+
+\end{algorithmic}
+\end{algorithm}
+
+\noindent
+The following is a graph that is used to analyse the Floyd-Warshall Algorithm.\\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{03_Theory/FloydWarshall/FloydGraph.drawio.png}
+    \caption{This happens because of the negative cycle taht forsm between $4$, $3$ and $2$.}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{Step 1:} - When the weights are not initilised, only the edge weights are added. \\
+\[
+d^{(initial)} =
+\begin{pmatrix}
+0 & 5 & -5 & 0 \\
+4 & 0 & 0 & -2 \\
+0 & 7 & 0 & 0 \\
+0 & 0 & 6 & 0 \\
+\end{pmatrix}
+\]
+\noindent
+\textbf{Step 2:} - Here no direct paths are added as $\infty$, whereas the diagonals vertices are reinitialized as $0$. \\
+\[
+d^{(0)} =
+\begin{pmatrix}
+0 & 5 & -5 & \infty \\
+4 & 0 & \infty & -2 \\
+\infty & 7 & 0 & \infty \\
+\infty & \infty& 6 & 0 \\
+\end{pmatrix}
+\]
+\noindent
+\textbf{Step 3:} - Algorithmic traversal when vertex = $A$. In red, the weights are the updated weights in the current iteration, the blue weights will be the weights updated from previous iteration.\\
+\[
+d^{(a)} =
+\begin{pmatrix}
+0 & 5 & -5 & \infty \\
+4 & 0 & \textcolor{red}{-1} & -2 \\
+\infty & 7 & 0 & \infty \\
+\infty & \infty & 6 & 0 \\
+\end{pmatrix}
+\]
+\noindent
+\textbf{Step 4:} - Algorithmic traversal when vertex = $B$. \\
+\[
+d^{(b)} =
+\begin{pmatrix}
+0 & 5 & -5 & \textcolor{red}{3} \\
+4 & 0 & \textcolor{blue}{-1} & -2 \\
+\textcolor{red}{11} & 7 & 0 & \textcolor{red}{5} \\
+\infty & \infty & 6 & 0 \\
+\end{pmatrix}
+\]
+\noindent
+\textbf{Step 5:} - Algorithmic traversal when vertex = $C$. \\
+\[
+d^{(c)} =
+\begin{pmatrix}
+0 & \textcolor{red}{2} & -5 & \textcolor{red}{0} \\
+4 & 0 & \textcolor{blue}{-1} & -2 \\
+\textcolor{blue}{11} & 7 & 0 & \textcolor{blue}{5} \\
+\textcolor{red}{17} & \textcolor{red}{13} & 6 & 0 \\
+\end{pmatrix}
+\]
+\noindent
+\textbf{Step 6:} - Algorithmic traversal when vertex = $D$. \\
+\[
+d^{(d)} =
+\begin{pmatrix}
+0 & \textcolor{blue}{2} & -5 & \textcolor{blue}{0} \\
+4 & 0 & \textcolor{blue}{-1} & -2 \\
+\textcolor{blue}{11} & 7 & 0 & \textcolor{blue}{5} \\
+\textcolor{blue}{17} & \textcolor{blue}{13} & 6 & 0 \\
+\end{pmatrix}
+\]
+\noindent
+\textbf{Result: } Final graph matrix. \\
+
+\[
+d^{(final)} =
+\begin{pmatrix}
+0 & 2 & -5 & 0 \\
+4 & 0 & -1 & -2 \\
+11& 7 & 0 & 5 \\
+17 & 13 & 6 & 0 \\
+\end{pmatrix}
+\]
+\noindent
+\textbf{RESULTS:}\\
+\textbf{Output of Dijkstra's Algorithm}
+\begin{verbatim}
+Adjacency Matrix Representation
+0 1 0 0 0 0 0 0 8 3 
+1 0 4 0 0 0 0 2 0 0 
+0 4 0 -6 2 0 0 0 0 0 
+0 0 -6 0 7 0 0 0 -3 0 
+0 0 2 7 0 -10 0 0 0 0 
+0 0 0 0 -10 0 7 -5 0 0 
+0 0 0 0 0 7 0 4 9 0 
+0 2 0 0 0 -5 4 0 2 0 
+8 0 0 -3 0 0 9 2 0 -4 
+3 0 0 0 0 0 0 0 -4 0 
+Dijkstra shortest paths are:
+0 ---> 0
+1 ---> 1
+2 ---> -10
+3 ---> -4
+4 ---> -8
+5 ---> -18
+6 ---> -19
+7 ---> -23
+8 ---> -1
+9 ---> 3
+\end{verbatim}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{04_Results/Dijkstra.png}
+    \caption{Dijkstra's Algorithm Result in compiler}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{Output of Bellman-Ford Algorithm}
+\begin{verbatim}
+Adjacency Matrix Representation
+0 1 0 0 0 0 0 0 0 3 
+0 0 5 0 0 0 0 2 0 0 
+0 4 0 -6 2 0 0 0 0 0 
+0 0 0 0 0 0 0 0 -3 0 
+0 0 0 7 0 -10 0 0 0 0 
+0 0 0 0 0 0 7 0 0 0 
+0 0 0 0 0 0 0 4 0 0 
+0 0 0 0 0 -5 0 0 2 0 
+8 0 0 0 0 0 9 0 0 0 
+0 0 0 0 0 0 0 0 -4 0 
+Bellman-Ford shortest paths are:
+0 ---> 0
+1 ---> 1
+2 ---> 6
+3 ---> 0
+4 ---> 8
+5 ---> -2
+6 ---> 5
+7 ---> 3
+8 ---> -3
+9 ---> 3
+\end{verbatim}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{04_Results/BellMan.png}
+    \caption{Bellman-Ford Algorithm Result in compiler}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{Output of Floyd-Warshall Algorithm}
+\begin{verbatim}
+Adjacency Matrix Representation
+0 5 -5 0 
+4 0 0 -2 
+0 7 0 0 
+0 0 6 0 
+The matrix after adding infinity is
+0 5 -5 999 
+4 0 999 -2 
+999 7 0 999 
+999 999 6 0 
+Step 1
+----------------
+0 5 -5 999 
+4 0 -1 -2 
+999 7 0 999 
+999 999 6 0 
+----------------
+Step 2
+----------------
+0 5 -5 3 
+4 0 -1 -2 
+11 7 0 5 
+999 999 6 0 
+----------------
+Step 3
+----------------
+0 2 -5 0 
+4 0 -1 -2 
+11 7 0 5 
+17 13 6 0 
+----------------
+Step 4
+----------------
+0 2 -5 0 
+4 0 -1 -2 
+11 7 0 5 
+17 13 6 0 
+----------------
+The matrix after adding Alg implementation is
+0 2 -5 0 
+4 0 -1 -2 
+11 7 0 5 
+17 13 6 0 
+\end{verbatim}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{04_Results/Floyd.png}
+    \caption{Floyd-Warshall Algorithm Result in compiler}
+    \label{fig:placeholder}
+\end{figure}
+\noindent
+\textbf{DISCUSSION:}
+\begin{table}[H]
+\centering
+\caption{Comparison of Shortest Path Algorithms}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Feature} & \textbf{Dijkstra’s} & \textbf{Bellman--Ford} & \textbf{Floyd--Warshall} \\
+\hline
+Source Type & Single-source & Single-source & All-pairs \\
+\hline
+Negative Edge Weights & Not allowed & Allowed & Allowed \\
+\hline
+Negative Cycle Detection & No & Yes & No \\
+\hline
+Algorithmic Technique & Greedy & Dynamic Programming & Dynamic Programming \\
+\hline
+Time Complexity & $O((V+E)\log V)$ & $O(VE)$ & $O(V^3)$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\noindent
+\textbf{Puzzle:} Given a graph, if the edge of the graph is changed, and we have a prior knowledge about it. Explain the use of Dijkstra' Algorithm in this case and how it can be optimized without the use of Dijkstra.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{04_Discussion/Puzzle/Puzzle_1.drawio.png}
+    \caption{Graph under consideration}
+    \label{fig:placeholder}
+\end{figure}
+
+\textbf{Proposed Solution:}
+\noindent
+\textbf{Case 1}: If the edge affected is the part of shortest path, and if the edge weight is less than the previous weight assigned, then there is no problem as Dijkstra will not be used.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{04_Discussion/Puzzle/Puzzle_2.drawio.png}
+    \caption{Graph after weight change}
+    \label{fig:placeholder}
+\end{figure}
+
+\textbf{Case 2}: If the edge affected is the part of shortest path, and if the edge weight is greater than the previous weight assigned, then  only the relaxation from effective vertices can be considered and different algorithms may be used to choose the next shortest path and compare them along the way.\\
+
+\noindent
+\textbf{ACKNOWLEDGEMENT: }\\
+I would like to share my thanks to Prof. Amitalok J Budkuley for explaining the context of the algorithms. I would like to extend my thanks to TAs Anuj Meena and Siva Sankar Thummala for questioning the fundamentals of the experiment and helping throughout along with the prblem description. I would like to thank my colleagues Mayank Singh, Saptarshi Bhattacharjee and Soumava Biswas for collaborating in lab throughout the experiment. 
+
+\noindent
+\printbibliography
+
+\noindent
+\textbf{APPENDIX (CODE): }\\
+\appendix
+\noindent
+\textbf{Djikstra's Algorithm in C}
+\begin{lstlisting}
+#include <stdio.h>
+#include <stdbool.h>
+
+#define V 10
+#define MAX 999
+
+int minDist(int distArr[], bool vertArr[]){
+    int minm = MAX;
+    int index;
+    for (int i = 0; i < V; i++){
+        if(distArr[i] <= minm && vertArr[i] == false){
+            minm = distArr[i];
+            index = i;
+        }
+    }
+    return  index;
+}
+void Dijkstra(int mat[V][V], int src){
+    int distArr[V];
+    bool vertArr[V];
+    int min;
+    for(int i = 0; i < V; i++){
+        distArr[i] = MAX;
+        vertArr[i] = false;
+    }
+
+    distArr[src] = 0;
+    for(int i = 0;  i < V; i++){
+        min = minDist(distArr, vertArr);
+        vertArr[min] = true;
+        for(int j = 0; j < V; j++){
+            if(!vertArr[j] && mat[min][j] && distArr[min] != MAX && distArr[min] + mat[min][j] < distArr[j]){
+                distArr[j] = distArr[min] + mat[min][j];
+            }
+        }
+    }
+    printf("Dijkstra shortest paths are:\n");
+    for(int i = 0; i < V; i++){
+        printf("%d ---> %d\n", i, distArr[i]);
+    }
+
+}
+
+void addEdge(int mat[V][V], int i, int j, int w){
+	mat[i][j] = w;
+	mat[j][i] = w;
+}
+
+
+// to display matrix
+void displayMatrix(int mat[V][V]){
+	for (int i = 0; i < V; i++)
+	{
+		/* code */
+		for (int j = 0; j < V; j++)
+		{
+			/* code */
+			printf("%d ", mat[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+int main() {
+    /* code */
+    int mat[V][V] = {0};
+    addEdge(mat, 0, 1, 1);
+    addEdge(mat, 0, 9, 3);
+    addEdge(mat, 1, 2, 5);
+    addEdge(mat, 1, 7, 2);
+    addEdge(mat, 2, 1, 4);
+    addEdge(mat, 2, 3, -6);
+    addEdge(mat, 2, 4, 2);
+    addEdge(mat, 3, 8, -3);
+    addEdge(mat, 4, 3, 7);
+    addEdge(mat, 4, 5, -10);
+    addEdge(mat, 5, 6, 7);
+    addEdge(mat, 6, 7, 4);
+    addEdge(mat, 7, 5, -5);
+    addEdge(mat, 7, 8, 2);
+    addEdge(mat, 8, 6, 9);
+    addEdge(mat, 8, 0, 8);
+    addEdge(mat, 9, 8, -4 );
+    printf("Adjacency Matrix Representation\n");
+    displayMatrix(mat);
+    
+    Dijkstra(mat, 0);
+    return 0;
+}
+\end{lstlisting}
+\appendix
+\noindent
+\textbf{Bellman-Ford's Algorithm in C}
+\begin{lstlisting}
+    #include <stdio.h>
+#include <stdbool.h>
+
+#define V 10
+#define MAX 999
+
+void BellmanFord(int mat[V][V], int src){
+    int distArr[V];
+
+    // Step 1: Initialize distances
+    for(int i = 0; i < V; i++){
+        distArr[i] = MAX;
+    }
+    distArr[src] = 0;
+
+    // Step 2: Relax all edges V-1 times
+    for(int k = 0; k < V - 1; k++){
+        for(int i = 0; i < V; i++){
+            for(int j = 0; j < V; j++){
+                if(mat[i][j] != 0 && distArr[i] != MAX &&
+                   distArr[i] + mat[i][j] < distArr[j]){
+                    distArr[j] = distArr[i] + mat[i][j];
+                }
+            }
+        }
+    }
+
+    // Step 3: Check for negative weight cycles
+    for(int i = 0; i < V; i++){
+        for(int j = 0; j < V; j++){
+            if(mat[i][j] != 0 && distArr[i] != MAX &&
+               distArr[i] + mat[i][j] < distArr[j]){
+                printf("Graph contains a negative weight cycle\n");
+                return;
+            }
+        }
+    }
+
+    // Print result
+    printf("Bellman-Ford shortest paths are:\n");
+    for(int i = 0; i < V; i++){
+        printf("%d ---> %d\n", i, distArr[i]);
+    }
+}
+
+void addEdge(int mat[V][V], int i, int j, int w){
+    mat[i][j] = w;
+    // For undirected graph, keep this:
+    //mat[j][i] = w;
+}
+
+// Display matrix
+void displayMatrix(int mat[V][V]){
+    for(int i = 0; i < V; i++){
+        for(int j = 0; j < V; j++){
+            printf("%d ", mat[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main(){
+    int mat[V][V] = {0};
+
+    addEdge(mat, 0, 1, 1);
+    addEdge(mat, 0, 9, 3);
+    addEdge(mat, 1, 2, 5);
+    addEdge(mat, 1, 7, 2);
+    addEdge(mat, 2, 1, 4);
+    addEdge(mat, 2, 3, -6);
+    addEdge(mat, 2, 4, 2);
+    addEdge(mat, 3, 8, -3);
+    addEdge(mat, 4, 3, 7);
+    addEdge(mat, 4, 5, -10);
+    addEdge(mat, 5, 6, 7);
+    addEdge(mat, 6, 7, 4);
+    addEdge(mat, 7, 5, -5);
+    addEdge(mat, 7, 8, 2);
+    addEdge(mat, 8, 6, 9);
+    addEdge(mat, 8, 0, 8);
+    addEdge(mat, 9, 8, -4 );
+    
+
+    printf("Adjacency Matrix Representation\n");
+    displayMatrix(mat);
+    
+    BellmanFord(mat, 0);
+    return 0;
+}
+
+\end{lstlisting}
+\appendix
+\noindent
+\textbf{Floyd-Warshall's Algorithm in C}
+\begin{lstlisting}
+ 
+#include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
+
+#define V 4
+#define MAX 999
+
+void floydWarshall(int mat[V][V]);
+int minDist(int distArr[], bool vertArr[]);
+void addEdge(int mat[V][V], int i, int j, int w);
+void displayMatrix(int mat[V][V]);
+int min(int, int);
+
+int min(int i, int j){
+	int min = 0;
+	if (i < j){
+		min = i;
+	}
+	else{
+		min = j;
+	}
+	return min;
+}
+
+int minDist(int distArr[], bool vertArr[]){
+    int minm = MAX;
+    int index;
+    for (int i = 0; i < V; i++){
+        if(distArr[i] <= minm && vertArr[i] == false){
+            minm = distArr[i];
+            index = i;
+        }
+    }
+    return  index;
+}
+
+void floydWarshall(int mat[V][V]){
+	for (int i = 0; i < V; i++)
+	{
+		/* code */
+		for (int j = 0; j < V; j++)
+		{
+			/* code */
+			if(i == j){
+				mat[i][j] = 0;
+			}
+			else{
+				if(i != j && mat[i][j] != 0){
+					mat[i][j] = mat[i][j];
+				}
+				else{
+					mat[i][j] = MAX;
+				}
+			}
+		}
+	}
+	printf("The matrix after adding infinity is\n");
+	displayMatrix(mat);
+
+	for(int k = 0; k < V; k++){
+		for (int i = 0; i < V; i++){
+			for(int j = 0; j < V; j++){
+				if (mat[i][j]> mat[i][k] + mat[k][j]){ // (mat [i][k] != MAX && mat[k][j] != MAX)  { // && (mat [k][j] != MAX && mat[i][k] != MAX))
+					mat[i][j] = min(mat[i][j], mat[i][k] + mat[k][j]);
+					//mat[i][j] = mat[i][k] + mat[k][j];
+				}
+				else{
+					mat[i][j] = mat[i][j];
+				}
+			}
+			
+		}
+		printf("Step %d\n", k+1);
+		printf("----------------\n");
+		displayMatrix(mat);
+		printf("----------------\n");
+	}
+
+	printf("The matrix after adding Alg implementation is\n");
+	displayMatrix(mat); 
+
+
+}
+void addEdge(int mat[V][V], int i, int j, int w){
+	mat[i][j] = w;
+	//mat[j][i] = w;
+}
+
+
+// to display matrix
+void displayMatrix(int mat[V][V]){
+	for (int i = 0; i < V; i++)
+	{
+		/* code */
+		for (int j = 0; j < V; j++)
+		{
+			/* code */
+			printf("%d ", mat[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+int main() {
+    /* code */
+    int mat[V][V] = {0};
+    addEdge(mat, 0, 1, 5);
+    addEdge(mat, 0, 2, -5);
+    addEdge(mat, 1, 0, 4);
+    addEdge(mat, 2, 1, 7);
+    addEdge(mat, 3, 2, 6);
+    addEdge(mat, 1, 3, -2);
+    //addEdge(mat, 0, 1, 1);
+    printf("Adjacency Matrix Representation\n");
+    displayMatrix(mat);
+    floydWarshall(mat);
+    
+    //Dijkstra(mat, 0);
+    return 0;
+}
+
+\end{lstlisting}
+\end{document}

@@ -1,0 +1,340 @@
+\documentclass[a4paper,12pt]{article}
+
+% Packages
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{graphicx}   % for including images
+\usepackage{setspace}   % for line spacing
+\usepackage{geometry}   % for page margins
+\usepackage{titling}    % for title customization
+\usepackage{lipsum}     % for dummy text (can be removed)
+\usepackage{newtxtext,newtxmath} % Times New Roman
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{calc} 
+\usepackage{graphicx} % for including images
+\usepackage{caption}  % optional, for better captions
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Page setup
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+\begin{document}
+
+% Title Section
+\begin{center}
+    \large \textbf{EXPERIMENT (Hardware) -- Study on MPLS and Wireless LAN}
+    \rule{\linewidth}{1pt}
+\end{center}
+
+\vspace{3cm} % space before logo
+\begin{center}
+    \includegraphics[width=0.3\textwidth]{FrontPage/kgplogo.png} 
+\end{center}
+\vspace{2cm}
+\begin{center}
+    \textbf{\textit{Name: Dibyanshu Shekhar Dey}} \\
+    \textbf{\textit{Roll Number: 25EC64R23}} \\
+    \vspace{1cm}
+    
+\end{center}
+
+\vfill % push bottom text to bottom of page
+
+\begin{center}
+    \rule{13cm}{1pt}\\
+    \textbf{Design and Simulation Lab: Communication Networks} \\
+    Department of Electronics \& Electrical Communication Engineering \\
+    Indian Institute of Technology Kharagpur
+    \rule{13cm}{1pt}
+\end{center}
+\rule{\textwidth}{2pt}
+
+\newpage
+%Start of the experiment
+\noindent
+\textbf{AIM:} \\
+\begin{itemize}
+    \item Traditional Vs MPLS throughout measurement..
+    \item LDP analysis.
+    \item Analysis of MPLS Traffic Engineering.
+    \item Throughput measurement and comparison between servers and clients using a Access point.
+    \item Comparison and measurement of throughput for various transmission power levels and channels of the access point.
+\end{itemize}
+
+\noindent
+\rule{\textwidth}{2pt}
+\noindent
+\textbf{INTRODUCTION: }\\
+This experiment focuses on analyzing and comparing the performance of traditional IP routing and MPLS in terms of throughput. It includes studying LDP behavior and understanding how MPLS Traffic Engineering improves network efficiency by controlling traffic flow. Along with this, throughput is measured between servers and clients using a wireless access point to observe real network behavior. The experiment also evaluates how different transmission power levels and channel selections of the access point affect overall throughput, helping to understand performance variations in practical scenarios. \\
+
+\noindent
+\textbf{THEORY: }\\
+\noindent
+\textbf{MPLS}: MPLS is basically a packet forwarding technique where instead of checking complex Layer 3 routing tables for every packet, routers use labels. Because of this, packets follow pre-defined paths in the network, which makes the forwarding faster, more scalable and helps in better traffic management. \\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Theory/00_network_diagram.jpg}
+    \caption{Network Diagram for the network used in the experiment.}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{Usage of MPLS} MPLS is used because in traditional IP routing, the routers have to do a long lookup in routing tables for every packet. Instead, MPLS assigns a short fixed-length label to each packet, which simplifies forwarding. Due to this, packet delivery becomes faster, QoS (Quality of Service)  support improves, and it becomes easier to manage traffic and implement VPNs \cite{mpls_gfg}. \\
+
+\noindent
+\textbf{Advantages}: MPLS has several advantages : faster packet forwarding as it uses labels instead of routing table lookups, support for multiple protocols, and better traffic engineering for efficient resource usage. It also helps in providing QoS and supports scalable Layer 3 VPNs, while maintaining reliability through loop prevention using TTL \cite{mpls_gfg}.\\
+
+\noindent
+\textbf{Disadvantages}: At the same time, it has some drawbacks: more expensive than traditional IP routing, configuration and management are more complex, and its security is not as strong as encrypted VPN solutions. Also, it is not very suitable for small-scale networks \cite{mpls_gfg}.\\
+
+\noindent
+\textbf{MPLS Traffic Engineering}: MPLS Traffic Engineering (TE) works using constraint-based routing, meaning instead of just taking the shortest path, it selects a path that satisfies certain conditions like bandwidth requirements or inclusion/exclusion of specific routers or interfaces. The experiment heavily involves the usage of these constraints. To control how traffic flows, it creates unidirectional tunnels from source to destination using Label Switched Paths (LSPs). These tunnels are built with specific constraints such as bandwidth, affinity, or priority, and are then used to forward traffic along the desired path \cite{mpls_te_networklessons}. \\
+
+\noindent
+\textbf{Wireless Access Point}: A Wireless Access Point (WAP) is a device that is used to connect wireless devices to a wired network and create a WLAN, especially in large offices or buildings. Compared to a normal wireless router, it can support a much higher number of users (around 50–100 or more) and has a stronger signal strength. It also provides a much larger coverage area (around 100–300 meters), which makes it suitable for big organizations. Another important advantage is flexibility, as it supports different networking setups depending on requirements, and also allows users to move freely while staying connected to the network\cite{wap_gfg}.\\
+
+\noindent
+However, WAP also has some disadvantages. It is relatively expensive to deploy, especially in large networks where multiple access points are required. The stability is lower compared to wired networks since wireless communication depends on air, and signals can be affected by obstacles like walls, weather conditions, or interference. Security is also weaker because data is transmitted over radio waves, making it more vulnerable to attacks. Additionally, the range can be limited by environmental factors, and bandwidth limitations can reduce speed and overall reliability \cite{wap_gfg}.\\
+
+\noindent
+In terms of applications, WAP is mainly used in large enterprises to create and extend WLAN coverage so that users remain connected across different areas. It helps in connecting devices through switches, routers, and Ethernet, and enables seamless mobility within offices. It is also widely used in public places like cafes, airports, and restaurants. Other uses include wireless printing and connecting devices to cloud services for data backup and synchronization \cite{wap_gfg}. \\
+
+\noindent
+\textbf{SNR}: SNR (Signal-to-Noise Ratio) basically tells how strong the actual signal is compared to the background noise. It is defined as the ratio of signal power to noise power and is usually expressed in decibels (dB). A higher SNR means the signal is much stronger than noise, which indicates better signal quality \cite{snr_wikipedia}.\\
+
+\begin{align}
+P_{\text{signal,dB}} &= 10 \log_{10}(P_{\text{signal}}) \\
+P_{\text{noise,dB}}  &= 10 \log_{10}(P_{\text{noise}}) \\
+\text{SNR}_{\text{dB}} &= 10 \log_{10}(\text{SNR}) \\
+\text{SNR}_{\text{dB}} &= 10 \log_{10}\left(\frac{P_{\text{signal}}}{P_{\text{noise}}}\right)
+\end{align}
+\noindent
+\textbf{RESULTS:}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Experiment Name & Time Duration (sec) & Rate (kbytes/sec) \\
+\hline
+Largest Path & 63.93 & 174.503 \\
+MPLS File Transfer & 52.65 & 211.37 \\
+Throughput - One Server One Client (1S1C) & 15.32 & 736.44 \\
+Two Server Two Client (2S2C) & 22.906 & 407.27 \\
+2S2C 30 mW PC 1 & 21.673 & 537.355 \\
+2S2C 30 mW PC 2 & 23.61 & 488.49 \\
+2S2C 1 mW PC 1 & 32.86 & 332.83 \\
+2S2C 1 mW PC 2 & 29.17 & 383.36 \\
+Different access point same channel PC 1 & 21.83 & 529.87 \\
+Different access point same channel PC 2 & 24.23 & 464.61 \\
+Different access point different channel PC 1 & 18.96 & 580.27 \\
+Different access point different channel PC 2 & 23.24 & 452.106 \\
+Channel 3 & 26.24 & 452.106\\
+\hline
+\end{tabular}
+\caption{Experimental Data and Results}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Distance (ft) & SNR (dB) \\
+\hline
+0 & 75\\
+13.5 & 44\\
+31.5 & 28\\
+50 & 28\\
+\hline
+\end{tabular}
+\caption{SNR Experimental Data and Results}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/01_longest_traffic_route.jpeg}
+    \caption{Longest traffic route}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/02_mpls_file_transfer.jpeg}
+    \caption{MPLS file transfer}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/03_a_mpls_forwarding_routing_table_a.jpeg}
+    \caption{MPLS Forwarding table or Router A}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/03_b_mpls_forwarding_routing_table_b.jpeg}
+    \caption{MPLS Forwarding table or Router B}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/03_d_mpls_routing_table_d.jpeg}
+    \caption{MPLS Forwarding table or Router D}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/03_e_mpls_routing_table_e.jpeg}
+    \caption{MPLS Forwarding table or Router E}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/03_f_mpls_routing_table_f.jpeg}
+    \caption{MPLS Forwarding table or Router F}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/04_router_a_f_10101021.jpeg}
+    \caption{Trace Router A to F thorugh 10.10.10.21}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/04_router_a_to_f_thorugh_d.jpeg}
+    \caption{Trace of Router A to F Through D}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/04_router_a_to_f_trace.jpeg}
+    \caption{Trace of Router A to F}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/05_two_server_two_client.jpeg}
+    \caption{2 Server 2 Client}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/06_a_2S2C_30m_PC1.jpeg}
+    \caption{2 server 2 client 30 mW - PC 1}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/06_b_2S2C_30mw_PC2.jpeg}
+    \caption{2 server 2 client 30 mW - PC 2}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/07_a_2S2C_1mw_PC1.jpeg}
+    \caption{2 server 2 client 1 mW - PC 1}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/07_b_2S2C_1mw_PC2.jpeg}
+    \caption{2 server 2 client 1 mW - PC 2}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/08_a_diff_acc_pt_same_ch_PC1.jpeg}
+    \caption{Different Access Point Same channel PC 1}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/08_b_diff_access_pt_same_ch_PC2.jpeg}
+    \caption{Different Access Point Same channel PC 2}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/09_a_diff_access_pt_same_ch_PC1.jpeg}
+    \caption{Differnet access point differnet channel PC 1}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/09_b_diff_access_pt_diff_ch_PC2.jpeg}
+    \caption{Differnet access point differnet channel PC 2}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/10_channel_3.jpeg}
+    \caption{Channel 3}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/11_a_snr_0.jpeg}
+    \caption{SNR 0 ft}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/11_b_snr_13_5_ft.jpeg}
+    \caption{SNR 13.5 ft}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/11_c_snr_31_5_ft.jpeg}
+    \caption{SNR 31.5 ft}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Results/11_d_snr_50_ft.jpeg}
+    \caption{SNR 50 ft}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{DISCUSSION:}\\
+Based on the MPLS Experiment, it was found that MPLS have better transmission rate and time duration taken by MPLS is considerably lower than traditional approach. For OSOC, 2S2C eperiments, the experiment was performed 3 times and the data is the average of these experiments. One observation is lower the power, higher thetime duration and lower the transmission rate. The different access different channel/same channel was done in two PCs simultanwously. THE SNR measurement experiment was consistent with theoretical understanding.\\
+
+\noindent
+\textbf{ACKNOWLEDGEMENT: }\\
+I would like to share my thanks to Prof. Amitalok J Budkuley for explaining the context of the algorithms. I would like to extend my thanks to TAs in Communication Networks Lab for explaining the
+fundamentals of the experiment with great presentation and simulations,  and helping throughout along with the problem description. I
+would like to thank my colleagues Mayank Singh and Saptarshi Bhattacharjee for collaborating in lab throughout the experiment.
+\noindent
+\printbibliography
+
+\end{document}

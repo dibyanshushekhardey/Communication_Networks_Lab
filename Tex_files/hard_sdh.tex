@@ -1,0 +1,215 @@
+\documentclass[a4paper,12pt]{article}
+
+% Packages
+\usepackage{float}
+\usepackage{graphicx}   % for including images
+\usepackage{setspace}   % for line spacing
+\usepackage{geometry}   % for page margins
+\usepackage{titling}    % for title customization
+\usepackage{lipsum}     % for dummy text (can be removed)
+\usepackage{newtxtext,newtxmath} % Times New Roman
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{calc} 
+\usepackage{graphicx} % for including images
+\usepackage{caption}  % optional, for better captions
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{%
+  language=Matlab,                % set language to MATLAB
+  basicstyle=\ttfamily\footnotesize, % code font
+  keywordstyle=\color{blue},      % keywords in blue
+  stringstyle=\color{red},        % strings in red
+  commentstyle=\color{green!50!black}, % comments in green
+  numbers=left,                   % line numbers on the left
+  numberstyle=\tiny\color{gray},  % style of numbers
+  frame=single,                   % box around the code
+  breaklines=true,                % wrap long lines
+  tabsize=4                       % tab size
+}
+
+% Page setup
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+\begin{document}
+
+% Title Section
+\begin{center}
+    \large \textbf{EXPERIMENT NO. 04 -- Study of SDH-Based Communication Networks with ISDN, ADSL, and VoIP Integration}
+    \rule{\linewidth}{1pt}
+\end{center}
+
+\vspace{3cm} % space before logo
+\begin{center}
+    \includegraphics[width=0.3\textwidth]{kgplogo.png} 
+\end{center}
+\vspace{2cm}
+\begin{center}
+    \textbf{\textit{Name: Dibyanshu Shekhar Dey}} \\
+    \textbf{\textit{Roll Number: 25EC64R23}} \\
+    \vspace{1cm}
+
+    \textbf{Group Members:}\\
+    \textbf{\textit{25EC64R21	Mayank Singh}}\\
+    \textbf{\textit{25EC64R23	Dibyanshu Shekhar Dey}} \\
+    \textbf{\textit{25EC64R15	Saptarshi Bhattacharjee}}  \\
+    \vspace{1cm}
+\end{center}
+
+\vfill % push bottom text to bottom of page
+
+\begin{center}
+    \rule{13cm}{1pt}\\
+    \textbf{Design and Simulation Lab: Communication Networks} \\
+    Department of Electronics \& Electrical Communication Engineering \\
+    Indian Institute of Technology Kharagpur
+    \rule{13cm}{1pt}
+\end{center}
+\rule{\textwidth}{2pt}
+
+\newpage
+%Start of the experiment
+\noindent
+\textbf{AIM:}  The aim of the experiment is to have an understanding and evaluate the principles and performance of communication technologies such as ISDN, ADSL, EPABX, and VoIP by studying their configuration, data transmission mechanisms, and performance characteristics. 
+\noindent
+\rule{\textwidth}{2pt}
+\noindent
+\textbf{INTRODUCTION: }\\
+\noindent
+\textbf{SDH: } (Synchronous Digital Hierarchy) is a synchronous optical network standard which is used for high-speed data and voice transmission over optical fiber.\\
+\begin{itemize}
+    \item Base rate: STM-1 = 155.52 Mbps.
+    \item Uses synchronous clocking.
+    \item Supports add/drop of lower-rate signals without full demultiplexing.
+\end{itemize}
+
+\noindent
+\textbf{ADM: } An Add–Drop Multiplexer (ADM) is an important network element which is used in SDH/SONET communication systems to manage high-speed optical data streams. Its main function is to insert (add) or extract (drop) lower-bit-rate signals such as E1, E3, or Ethernet from a high-capacity optical signal without the need to fully demultiplex the
+entire data stream. This capability significantly reduces processing complexity and improves network efficiency \cite{analog_adm_glossary}. \\
+
+\noindent
+\textbf{ATM: }Asynchronous Transfer Mode (ATM) is a high-speed, cell-based switching and multiplexing technology that has been developed to support the integrated transmission of voice, video, and data over a single communication network. It mainly uses fixed-length cells of 53 bytes, which enables fast and predictable data transfer with low latency \cite{geeksforgeeks_atm_computer_network}.\\
+
+\noindent
+\textbf{EPBAX: }An Electronic Private Automatic Branch Exchange (EPBAX) is a private telephone system used within organizations to manage internal and external calls efficiently. It automatically connects calls between extensions and links users to the public telephone network without needing a manual operator. By offering features like call transfer, forwarding, conferencing, and extension-based dialing, EPABX enhances communication flow while lowering operating costs. It is commonly deployed in offices, institutions, and industries to streamline telephony and support modern voice communication needs.\cite{civilsdaily_epabx_modern_communication} \\
+
+\noindent
+\textbf{ISDN: }Integrated Services Digital Network {ISDN} is a digital communication system that transmits voice, data, and video over conventional telephone lines. Since it uses digital signaling instead of analog, it offers clearer voice quality and quicker call establishment. ISDN also supports Direct Outward Dialing (DOD), allowing internal users to dial external numbers directly without operator involvement\cite{geeksforgeeks_isdn_computer_network}.\\
+
+\noindent
+\textbf{BRI: }Basic Rate Interface (BRI) is designed for small offices and environments with limited call traffic. It consists of two Bearer (B) channels and one Data (D) channel, known as 2B + D. Each B channel operates at 64 kbps for voice or data, while the D channel runs at 16 kbps for signaling. The combined data rate of BRI is 144 kbps.\cite{wikipedia_bri}\\
+
+\noindent
+\textbf{PRI: }Primary Rate Interface (PRI) is used in large organizations that require high call capacity. Under the European E1 standard, it includes 30 B channels for communication, one D channel for signaling, and one framing channel, forming a 30B + D structure. Each channel works at 64 kbps, giving a total bandwidth of 2.048 Mbps. PRI enables multiple simultaneous calls and is commonly used to connect PBX systems\cite{wikipedia_pri_2026}.\\
+
+\noindent
+\textbf{B Channel: }The B (Bearer) channel carries actual user data such as voice, video, or digital information. Each B channel supports a data rate of 64 kbps. In a PRI setup, the presence of 30 B channels allows up to 30 concurrent voice calls \cite{sciencedirect_bri_topic}.\\
+
+\noindent
+\textbf{D Channel: }The D (Data) channel is responsible for signaling tasks like call setup, control, and termination. It does not transmit voice data. In BRI systems, the D channel operates at 16 kbps, while in PRI systems it runs at 64 kbps\cite{geeksforgeeks_isdn_computer_network}.\\
+
+\noindent
+\textbf{ADSL: }Asymmetric Digital Subscriber Line (ADSL) is a broadband technology that delivers high-speed internet over existing copper telephone lines. It is termed “asymmetric” because download speeds are higher than upload speeds, matching typical internet usage patterns. ADSL separates frequencies by using lower frequencies for voice calls and higher frequencies for data transmission \cite{wikipedia_adsl_2026}.\\
+
+\noindent
+\textbf{DSLAM: }A Digital Subscriber Line Access Multiplexer (DSLAM) is installed at the service provider’s end to manage multiple DSL connections. It aggregates individual ADSL lines from subscribers and links them to a high-speed backbone network, ensuring efficient data handling \cite{geeksforgeeks_dslam}.\\
+
+\noindent
+\textbf{Ethernet Switch: }An Ethernet switch is a Layer-2 networking device used within a local area network. It forwards data frames based on MAC addresses, allowing devices to communicate efficiently while minimizing collisions \cite{geeksforgeeks_network_devices}.\\
+
+\noindent
+\textbf{Noise Margin}: Noise margin represents the safety gap between the actual signal-to-noise ratio and the minimum required level for stable communication. A higher noise margin generally indicates a more reliable connection \cite{edurev_noise_margin}.\\
+
+\noindent
+\textbf{Uplink and Downlink: }Uplink refers to data sent from the user to the network, while downlink refers to data received from the network by the user. In ADSL systems, downlink speeds are higher because more bandwidth is allocated to downloading than uploading \cite{linkpp_uplink_downlink_2025}.\\
+
+\noindent
+\textbf{Working of IP Phones: }IP phones use internet protocol networks instead of traditional telephone lines for voice communication. The speaker’s voice is converted into digital packets and transmitted across the IP network using standard communication protocols \cite{geeksforgeeks_voip}.\\
+
+\noindent
+\textbf{Call Manager: }A Call Manager is a centralized system that controls and manages IP-based voice calls. It registers IP phones, assigns extensions, handles call routing, and manages call features such as hold, transfer, conferencing, and voicemail \cite{netcomlearning_cucm}.\\
+
+\noindent
+\textbf{Call Flow, Call Hopping: } Call flow explains the path a call follows through the network. An IP phone first sends a call request to the Call Manager, which checks the destination and signals the receiving phone. Once the call is accepted, voice packets travel directly between devices through switches and routers. The session is released when the call ends \cite{cisco_uc_flow_uc5}.\\
+
+\noindent
+\textbf{VoIP: }Voice over IP (VoIP) is a communication technology that transmits voice over IP networks using packet switching instead of traditional circuit switching. It supports voice, video, and data on the same network through protocols like SIP, RTP, and UDP. VoIP is cost-effective, scalable, and easily integrates with data networks, provided proper Quality of Service (QoS) is maintained \cite{geeksforgeeks_voip}.\\
+
+\noindent
+\textbf{EXPERIMENTAL OUTCOMES: }\\
+\begin{itemize}
+    \item The physical SONET/SDH ports on the ADM were first selected and configured, and the optical link status was verified to ensure proper connectivity.
+    \item Virtual Ethernet ports were then created and mapped over the SDH network using Ethernet over SDH (EoSDH).
+    \item IP addresses were assigned to both PCs, and basic network connectivity was checked using the ping command.
+    \item File transfer between the two systems was carried out using FTP to confirm successful data communication.
+    \item Three SDH channels were initiated, each operating at a data rate of approximately 2.048 Mbps.
+    \item During the file transfer, a receiving throughput of about 716.63 kB/s was observed, indicating successful multi-channel data transmission over SDH while accounting for protocol and network overheads.
+    \item In another observation, a data throughput of approximately 774.26 kB/s was obtained, further confirming reliable performance of the SDH-based transmission.
+    \item Similarly, an ISDN link was established between the two end systems, and IP configuration was completed successfully.
+    \item Network connectivity over ISDN was verified before performing data transfer using FTP.
+    \item The file transfer over ISDN was completed in about 202.33 seconds, with an average receiving throughput of approximately 45.46 kB/s.
+    \item These results confirm stable and successful data transmission over both SDH and ISDN networks, considering the inherent protocol and signaling overheads.\\
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Expt_result_1.png}
+    \caption{Experimental Result 1}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Expt_result_2.png}
+    \caption{Experimental Result 2}
+    \label{fig:placeholder}
+\end{figure}\\
+
+\noindent
+\textbf{DISCUSSION:}
+
+\noindent
+\textbf{OSI Model: }The OSI model is a seven-layer reference framework that explains how data moves from one device to another in a network. Each layer has a defined role and communicates with adjacent layers to ensure proper data transmission\cite{geeksforgeeks_osi_model}.\\
+
+\begin{itemize}
+    \item Physical Layer: Transmits raw bits through physical media such as cables and signals.
+    \item Data Link Layer: Performs framing, MAC addressing, and error detection.
+    \item Network Layer: Manages logical addressing and packet routing.
+    \item Transport Layer: Provides reliable data transfer, flow control, and error recovery.
+    \item Session Layer: Establishes, maintains, and terminates communication sessions.
+    \item Presentation Layer: Handles data formatting, encryption, and compression.
+    \item Application Layer: Offers network services directly to user applications.
+\end{itemize}
+
+\noindent
+\textbf{Why SDH Is Called Synchronous} SDH is termed synchronous because all network elements operate using a common clock. This ensures that data across the network is transmitted at the same rate without timing mismatches \cite{vasexperts_sdh_glossary}.\\
+
+\noindent
+\textbf{Derivation of E1 Data Rate (2.048 Mbps)}: In the E1 PCM system, each voice signal is sampled at 8 kHz and encoded using 8 bits per sample, resulting in a 64 kbps data rate per channel. An E1 frame consists of 32 such time slots. Hence, the total data rate becomes
+32 × 64 kbps = 2048 kbps, which equals 2.048 Mbps. \\
+
+\noindent
+\textbf{Why ATM Was Replaced}:ATM technology was gradually phased out due to its complex structure, high implementation cost, and lower efficiency compared to modern Ethernet and IP-based networks, which offer better scalability and flexibility \cite{geeksforgeeks_atm_computer_network}.\\
+
+\noindent
+\textbf{Speed Comparison of EPABX and SDH}:EPABX systems typically operate at lower data rates and use circuit-switched voice channels such as E1 links at 2.048 Mbps. In contrast, SDH supports very high-speed transmission, starting from STM-1 at 155.52 Mbps, and can carry multiple voice and data channels efficiently. IP-based systems further enhance speed and support multimedia communication depending on available bandwidth \cite{civilsdaily_epabx_modern_communication, vasexperts_sdh_glossary}.\\
+
+\noindent
+\textbf{DSLAM as a Low-Pass Filter}: In DSL systems, both voice and data signals share the same copper line. Voice signals occupy lower frequencies, while data uses higher frequencies. At the DSLAM, filtering allows only low-frequency voice signals to pass toward the PSTN while blocking high-frequency data signals, making its operation similar to a low-pass filter \cite{geeksforgeeks_dslam}.\\
+
+\noindent
+\textbf{Why ADSL Is Called Asymmetric}:ADSL is termed asymmetric because it provides a higher data rate in the downlink direction compared to the uplink. This design suits common internet usage patterns where downloading data is more frequent than uploading \cite{wikipedia_adsl_2026}.\\
+
+\noindent
+\textbf{ACKNOWLEDGEMENT: }\\
+I would like to share my thanks to Prof. Amitalok J Budkuley for explaining the context of the algorithms. I would like to extend my thanks to TA Ajay Mehra for questioning the fundamentals of the experiment and helping throughout along with the problem description. I would like to thank my colleagues Mayank Singh, Saptarshi Bhattacharjee and Soumava Biswas for collaborating in lab throughout the experiment. \\
+
+\noindent
+\printbibliography
+
+\end{document}

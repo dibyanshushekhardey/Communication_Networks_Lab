@@ -1,0 +1,318 @@
+\documentclass[a4paper,12pt]{article}
+
+% Packages
+\usepackage{float}
+\usepackage{graphicx}   % for including images
+\usepackage{setspace}   % for line spacing
+\usepackage{geometry}   % for page margins
+\usepackage{titling}    % for title customization
+\usepackage{lipsum}     % for dummy text (can be removed)
+\usepackage{newtxtext,newtxmath} % Times New Roman
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{calc} 
+\usepackage{graphicx} % for including images
+\usepackage{caption}  % optional, for better captions
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{%
+  language=Matlab,                % set language to MATLAB
+  basicstyle=\ttfamily\footnotesize, % code font
+  keywordstyle=\color{blue},      % keywords in blue
+  stringstyle=\color{red},        % strings in red
+  commentstyle=\color{green!50!black}, % comments in green
+  numbers=left,                   % line numbers on the left
+  numberstyle=\tiny\color{gray},  % style of numbers
+  frame=single,                   % box around the code
+  breaklines=true,                % wrap long lines
+  tabsize=4                       % tab size
+}
+
+% Page setup
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+\begin{document}
+
+% Title Section
+\begin{center}
+    \large \textbf{EXPERIMENT -- Study on L2 Switches}
+    \rule{\linewidth}{1pt}
+\end{center}
+
+\vspace{3cm} % space before logo
+\begin{center}
+    \includegraphics[width=0.3\textwidth]{FrontPage/kgplogo.png} 
+\end{center}
+\vspace{2cm}
+\begin{center}
+    \textbf{\textit{Name: Dibyanshu Shekhar Dey}} \\
+    \textbf{\textit{Roll Number: 25EC64R23}} \\
+    \vspace{1cm}
+    
+\end{center}
+
+\vfill % push bottom text to bottom of page
+
+\begin{center}
+    \rule{13cm}{1pt}\\
+    \textbf{Design and Simulation Lab: Communication Networks} \\
+    Department of Electronics \& Electrical Communication Engineering \\
+    Indian Institute of Technology Kharagpur
+    \rule{13cm}{1pt}
+\end{center}
+\rule{\textwidth}{2pt}
+
+\newpage
+%Start of the experiment
+\noindent
+\textbf{AIM:} \\
+\textbf{Primary Tasks:}
+\begin{itemize}
+    \item Formation of MAC Address Table and updating MAC address table. \item ARP Table formation and Study of Spanning Tree Protocol.
+    \item Switch vs Hub
+    \item VLAN
+\end{itemize}
+
+\noindent
+\rule{\textwidth}{2pt}
+\noindent
+\textbf{INTRODUCTION: }
+
+\noindent
+Computer networks enable communication and data exchange between multiple devices connected through wired or wireless media. To facilitate efficient communication, different networking devices and protocols are used, each performing specific functions within the network. The Open Systems Interconnection (OSI) model provides a conceptual framework that divides network communication into multiple layers, allowing different devices and protocols to operate in a structured manner.\\
+
+\noindent
+Several networking devices such as hubs, bridges, switches, and routers play important roles in connecting devices and managing data transmission across networks. Hubs operate at the physical layer and broadcast data to all connected devices, while bridges and switches operate at the data link layer and use MAC addresses to forward frames more efficiently within a local network. Layer--3 switches extend this functionality by incorporating routing capabilities, allowing communication between different VLANs within a network.\\
+
+\noindent
+Protocols such as the Address Resolution Protocol (ARP) assist in mapping IP addresses to MAC addresses, enabling devices to communicate within the same network. Additionally, mechanisms such as the Spanning Tree Protocol (STP) are used to prevent loops in networks containing multiple interconnected switches. Together, these devices and protocols help ensure efficient, reliable, and organized communication within modern computer networks.\\
+
+\noindent
+\textbf{THEORY: }
+
+\noindent
+\textbf{OSI Model Layers}
+
+\noindent
+The Open Systems Interconnection (OSI) model is a conceptual framework used to understand how data is transmitted across a network. It consists of seven layers, each responsible for a specific function in the communication process \cite{gfg_osi_model}.
+\begin{itemize}
+    \item \textbf{Layer 7 -- Application Layer:}  This is the top layer of the OSI model and provides network services directly to user applications. It enables communication between software applications and the network. Examples include protocols such as HTTP, FTP, SMTP, and DNS.
+    \item \textbf{Layer 6 -- Presentation Layer:}  The presentation layer is responsible for data formatting, encryption, and compression. It ensures that data sent from one system can be understood by another by translating it into a common format.
+    \item \textbf{Layer 5 -- Session Layer:}  The session layer manages and controls the connections between computers. It establishes, maintains, and terminates communication sessions between applications.
+    \item \textbf{Layer 4 -- Transport Layer:} The transport layer ensures reliable data transfer between end systems. It performs error detection, flow control, and segmentation of data. Common protocols at this layer include TCP and UDP.
+    \item \textbf{Layer 3 -- Network Layer:} The network layer is responsible for logical addressing and routing of packets across different networks. It determines the best path for data transmission. The Internet Protocol (IP) operates at this layer.
+    \item \textbf{Layer 2 -- Data Link Layer:} The data link layer provides node-to-node data transfer and handles error detection and correction for frames. It uses MAC addresses to identify devices on the same network.
+    \item \textbf{Layer 1 -- Physical Layer:} The physical layer deals with the physical transmission of raw bits over the communication medium. It includes hardware elements such as cables, switches, voltage levels, and data transmission rates.
+\end{itemize}
+
+\noindent
+\textbf{Hubs for Interconnecting Different LANs} \\
+\noindent
+A hub is one of the simplest devices used to interconnect multiple Local Area Networks (LANs). It operates at the Physical Layer of the OSI model and functions similarly to a repeater. When a hub receives a signal from one port, it regenerates the signal and retransmits it to all other outgoing ports. Because of this behavior, hubs operate on bits rather than frames or packets.\\
+
+\noindent
+Hubs support broadcasting, meaning that the incoming data is sent to all connected devices regardless of the intended destination. As a result, all connected devices share the same communication medium, which may increase collisions and reduce network efficiency. Hubs are commonly used to connect multiple smaller LAN segments to a central backbone hub, enabling communication between different groups of computers.\\
+
+\noindent
+\textbf{MAC Address: }\\
+\noindent
+A Media Access Control (MAC) address uniquely identifies a digital device on a network. Each network interface on a device requires its own MAC address. Therefore, a device may have multiple MAC addresses if it has multiple network interfaces \cite{coursera_mac_address}. \\
+
+\noindent
+\textbf{Bridge in Computer Networks}\\
+\noindent
+A bridge is a networking device used to connect multiple Local Area Networks (LANs) into a larger LAN. The process of connecting these networks is known as bridging. A bridge is a hardware device that operates at the Data Link Layer (Layer 2) of the OSI model and functions similarly to a Layer--2 switch \cite{gfg_bridge_network}.\\
+
+
+\noindent
+\textbf{Spanning Tree Protocol (STP)}\\
+\noindent
+The Spanning Tree Protocol (STP) is a network protocol used to prevent loops in Ethernet networks that contain multiple interconnected switches. It operates at the Data Link layer (Layer 2) of the OSI model and ensures a loop-free logical topology for Ethernet networks. Network loops can occur when there are \textbf{redundant paths} between switches, which may lead to broadcast storms, duplicate frames, and instability in the network. STP prevents these issues by selectively blocking certain redundant links while keeping them available as backup paths \cite{wiki_stp}.\\
+
+\noindent
+STP works by creating a \textbf{spanning tree structure} across the network. First, one switch is elected as the \textit{root bridge}, which acts as the central reference point for the spanning tree. Each switch then determines the shortest path to the root bridge based on path cost. The ports that provide the best path toward the root bridge are designated as \textit{root ports}, while switches also select \textit{designated ports} responsible for forwarding traffic on each network segment. Any remaining redundant ports are placed into a \textit{blocking state} to prevent loops \cite{wiki_stp}.\\
+
+\noindent
+If a link failure occurs, STP automatically recalculates the topology and activates previously blocked links to maintain connectivity. In this way, STP provides redundancy in the network while ensuring that only one active path exists between switches at any given time, thereby maintaining a stable and loop-free network environment \cite{wiki_stp}.\\
+
+\noindent
+\textbf{Layer--2 Switch}\\
+\noindent
+A Layer--2 switch operates at the Data Link layer (Layer 2) of the OSI model and uses MAC addresses to forward data frames between devices within the same local network. It maintains a MAC address table that maps device MAC addresses to specific switch ports, allowing frames to be sent only to the correct destination. Layer--2 switches also support VLANs, enabling logical segmentation of the network. By forwarding Ethernet frames based on MAC addresses, they help reduce collisions in LANs. However, all devices connected to a Layer--2 switch typically remain within the same broadcast domain \cite{gfg_layer2_layer3_switch}. \\
+
+\noindent
+\textbf{Address Resolution Protocol (ARP)}
+
+\noindent
+The Address Resolution Protocol (ARP) is a communication protocol used to map an Internet Protocol (IP) address to a corresponding Media Access Control (MAC) address within a local area network. In computer networks, devices identify each other using IP addresses at the network layer, but actual data transmission over the local network occurs using MAC addresses at the data link layer \cite{wiki_arp}. \\
+
+\noindent
+When a device wants to send data to another device on the same network, it first checks its ARP cache to determine whether the MAC address corresponding to the destination IP address is already known. If the mapping is not available, the device broadcasts an ARP request to all devices on the network asking which device owns the specified IP address. The device with the matching IP address then sends an ARP reply containing its MAC address. The sender stores this IP-to-MAC mapping in its ARP table and uses the MAC address to deliver the data frame \cite{wiki_arp}.\\
+
+\noindent
+Thus, ARP serves as a bridge between the network layer and the data link layer by enabling the translation of IP addresses into MAC addresses for proper packet delivery within a local network \cite{wiki_arp}.\\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Theory/ARP.png}
+    \caption{Working of ARP\cite{fortinet_arp}}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{Layer 3 Switch}:\\
+\textbf{Purpose of a Layer--3 Switch}: A Layer--3 switch combines the functionality of both a Layer--2 switch and a router. Its main purpose is to perform high-speed routing and switching within a local area network (LAN). It enables communication between different network segments or VLANs while maintaining the fast packet forwarding capability of a switch. Layer--3 switches are commonly used in large enterprise or campus networks where both routing and switching are required within the internal network \cite{planetech_layer3switch}. \\
+
+\noindent
+\textbf{Benefits of a Layer--3 Switch} : Layer--3 switches provide high performance because routing operations are performed in hardware using specialized processing chips. They enable efficient inter-VLAN communication without the need for an external router. Since routing is handled within the switch itself, network latency and congestion are reduced. They also support scalability, allowing networks to expand with many devices and VLANs while maintaining efficient communication. Additionally, they help improve network organization and management through better segmentation and routing control \cite{planetech_layer3switch}. \\ 
+
+\noindent
+\textbf{Features of a Layer--3 Switch} - Layer--3 switches support inter-VLAN routing, allowing devices in different VLANs to communicate with each other. They provide IP routing capabilities to forward packets between different networks. These switches can support both static and dynamic routing protocols. They also include features such as Access Control Lists (ACLs) for traffic filtering and security, Quality of Service (QoS) for prioritizing important network traffic, and VLAN support for network segmentation and traffic management \cite{planetech_layer3switch}. \\
+
+\noindent
+\textbf{Difference between Hub, Switch, and Router}
+\noindent
+\textbf{Hub:} A hub is a basic networking device that is used to connect multiple computers within a local area network (LAN). It operates at the Physical Layer (Layer 1) of the OSI model. When a hub receives data from one device, it broadcasts the data to all connected devices regardless of the intended destination. It does not perform any filtering or intelligent forwarding of packets. All devices connected to a hub share the same collision domain, which can lead to higher chances of network congestion and collisions. A hub does not store MAC addresses or maintain any form of routing table, which results in lower network efficiency \cite{gfg_hub_switch_router}.\\
+
+\noindent
+\textbf{Switch:} A switch is a networking device that connects multiple devices within a LAN and improves communication efficiency. It operates at the Data Link Layer (Layer 2) of the OSI model. Unlike a hub, a switch forwards data only to the intended destination device by using MAC addresses. It maintains a \textbf{MAC address table} that maps devices to specific ports. Each port on a switch forms a separate collision domain, which significantly reduces network collisions and improves overall performance. Switches also support advanced features such as VLANs and network segmentation \cite{gfg_hub_switch_router}.\\
+
+\noindent
+\textbf{Router:} A router is a networking device used to connect different networks together, such as connecting a local network to the Internet. It operates at the Network Layer (Layer 3) of the OSI model. Routers forward packets based on IP addresses and use routing tables to determine the best path for data transmission. They separate broadcast domains, which helps in reducing unnecessary network traffic. Routers also provide additional functionalities such as Network Address Translation (NAT), firewall capabilities, and traffic management, enabling communication between multiple networks \cite{gfg_hub_switch_router}.\\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Theory/HubSwitchRouter.drawio.png}
+    \caption{Schematic Representation of Hub, Switch and Routers. Note the hierarchy also represents the position they occupy in the layers of the OSI\cite{gfg_vlan}}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{VLAN (Virtual Local Area Network)} allows network administrators to logically group hosts together even if the hosts are not connected to the same physical network switch. It provides a method to divide a single broadcast domain into multiple smaller broadcast domains, which improves network organization, security, and efficiency. Hosts that belong to one VLAN cannot directly communicate with hosts in another VLAN. Communication between different VLANs requires a Layer--3 device such as a router or a Layer--3 switch to route the packets \cite{gfg_vlan}. \\
+
+\noindent
+When setting up a VLAN-based network, the network administrator decides how many VLANs will exist, which computers or devices will belong to each VLAN, and how the VLANs will be identified or named. For the VLANs to function correctly, configuration tables must be set up in switches or bridges. These tables specify which VLANs are accessible through particular switch ports, ensuring that network traffic is properly separated and managed \cite{gfg_vlan}. \\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Theory/VLANpng.png}
+    \caption{Schematic Representation of VLANs\cite{gfg_vlan}}
+    \label{fig:placeholder}
+\end{figure}
+\noindent
+\textbf{RESULTS:}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Results/Activepathsandtoplogyofnetwork.png}
+    \caption{Active paths and toplogy of network}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Results/IpOfSystem.png}
+    \caption{IP of the System}
+    \label{fig:placeholder}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Results/ConnectedDevices.png}
+    \caption{Connected Devices}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Results/Filetransferthroughswitchsingle.png}
+    \caption{File transfer through switch single}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Results/FileTransferThroughHubSingle.png}
+    \caption{File Transfer Through Hub Single Caption}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Results/Filetransferthroughhub.png}
+    \caption{File transfer through hub}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Results/Connectionrequesttoanotherdevicethroughswitch.png}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{CoonectionMac.png}
+    \caption{Overall Connection in the Laboratory, Note the red line is not the connected part. The system uses Spanning Tree Protocol.}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{DISCUSSION:}\\
+\textbf{What is the disadvantage of a hub in a computer network?} 
+\noindent
+A hub broadcasts incoming data to all connected devices regardless of the intended destination. This causes all devices to share the same collision domain, which increases the chances of data collisions and reduces network efficiency. Since hubs do not filter or intelligently forward data, they also lead to unnecessary network traffic and lower overall performance compared to switches.\\
+
+\noindent
+\textbf{Do bridges change the source address while forwarding frames?} 
+
+\noindent
+No, bridges do not change the source MAC address while forwarding frames. A bridge operates at the Data Link Layer (Layer 2) of the OSI model and forwards frames based on MAC addresses. When a frame arrives at the bridge, it examines the source MAC address to update its MAC address table and then forwards the frame to the appropriate port based on the destination MAC address. However, during this process, the bridge does not modify the source or destination MAC addresses of the frame.\\
+
+\noindent
+\textbf{ What is the difference between a hub and a repeater?}
+
+\noindent
+A repeater is a network device used to regenerate and amplify signals to extend the transmission distance in a network. It typically connects two network segments and operates at the Physical Layer of the OSI model. \\
+\noindent
+A hub, on the other hand, is essentially a multi-port repeater. It connects multiple devices in a network and retransmits the incoming signal to all its ports. Like a repeater, it also operates at the Physical Layer, but it allows several devices to be connected and communicate through a single central device.\\
+
+\noindent
+\textbf{How is broadcasting done at the Data Link Layer?} \\
+\noindent
+At the Data Link Layer (Layer 2), broadcasting is performed using a special MAC address known as the broadcast MAC address. In Ethernet networks, the broadcast MAC address is \texttt{FF:FF:FF:FF:FF:FF}. When a device sends a frame with this destination MAC address, the frame is received by all devices within the same broadcast domain.\\
+
+\noindent
+A switch forwards the broadcast frame through all its ports except the port from which the frame was received. As a result, all devices connected to the same LAN segment receive the frame. Each device then examines the frame and processes it if it is relevant.\\
+
+\noindent
+Broadcasting at the Data Link Layer is commonly used by protocols such as the Address Resolution Protocol (ARP), where a device broadcasts a request to determine the MAC address corresponding to a particular IP address.\\
+
+\noindent
+\textbf{Use of Layer 3 switch even if routers are there: }A Layer-3 switch is used even when routers are available because it can perform routing inside a LAN much faster while still providing switching functionality.
+
+\begin{itemize}
+    \item High-speed routing: Layer-3 switches use hardware-based processing (ASICs), enabling faster packet forwarding compared to many traditional routers.
+    \item Inter-VLAN routing: They allow devices in different VLANs to communicate directly within the switch without sending traffic to an external router.
+
+    \item Reduced latency: Since routing happens inside the switch, network delay and congestion are reduced.
+
+    \item More ports: Layer-3 switches usually provide many Ethernet ports, making them suitable for large LAN environments.
+\end{itemize}
+
+
+
+
+\noindent
+\textbf{ACKNOWLEDGEMENT: }\\
+I would like to share my thanks to Prof. Amitalok J Budkuley for explaining the context of the algorithms. I would like to extend my thanks to TAs in Communication Networks Lab for explaining the
+fundamentals of the experiment with great presentation and simulations,  and helping throughout along with the problem description. I
+would like to thank my colleagues Mayank Singh and Saptarshi Bhattacharjee for collaborating in lab throughout the experiment.
+\noindent
+\printbibliography
+
+\end{document}

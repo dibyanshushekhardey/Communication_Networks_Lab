@@ -1,0 +1,688 @@
+\documentclass[a4paper,12pt]{article}
+
+% Packages
+\usepackage{float}
+\usepackage{graphicx}   % for including images
+\usepackage{setspace}   % for line spacing
+\usepackage{geometry}   % for page margins
+\usepackage{titling}    % for title customization
+\usepackage{lipsum}     % for dummy text (can be removed)
+\usepackage{newtxtext,newtxmath} % Times New Roman
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{calc} 
+\usepackage{graphicx} % for including images
+\usepackage{caption}  % optional, for better captions
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{%
+  language=C,                % set language to MATLAB
+  basicstyle=\ttfamily\footnotesize, % code font
+  keywordstyle=\color{blue},      % keywords in blue
+  stringstyle=\color{red},        % strings in red
+  commentstyle=\color{green!50!black}, % comments in green
+  numbers=left,                   % line numbers on the left
+  numberstyle=\tiny\color{gray},  % style of numbers
+  frame=single,                   % box around the code
+  breaklines=true,                % wrap long lines
+  tabsize=4                       % tab size
+}
+
+% Page setup
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+\begin{document}
+
+% Title Section
+\begin{center}
+    \large \textbf{EXPERIMENT NO. 05 (Software) -- Socket Programming}
+    \rule{\linewidth}{1pt}
+\end{center}
+
+\vspace{3cm} % space before logo
+\begin{center}
+    \includegraphics[width=0.3\textwidth]{FrontPage/kgplogo.png} 
+\end{center}
+\vspace{2cm}
+\begin{center}
+    \textbf{\textit{Name: Dibyanshu Shekhar Dey}} \\
+    \textbf{\textit{Roll Number: 25EC64R23}} \\
+    \vspace{1cm}
+    
+\end{center}
+
+\vfill % push bottom text to bottom of page
+
+\begin{center}
+    \rule{13cm}{1pt}\\
+    \textbf{Design and Simulation Lab: Communication Networks} \\
+    Department of Electronics \& Electrical Communication Engineering \\
+    Indian Institute of Technology Kharagpur
+    \rule{13cm}{1pt}
+\end{center}
+\rule{\textwidth}{2pt}
+
+\newpage
+%Start of the experiment
+\noindent
+\textbf{AIM:} \\
+\textbf{Demo 1:} Demonstrate TCP-based client--server communication with multiple clients using socket programming.\\
+\textbf{Task}
+\begin{itemize}
+    \item Implement a TCP server listening on port 5000
+    \item Three clients connect to the server
+    \item Each client sends a distinct message:
+    \begin{itemize}
+        \item Client 1: \texttt{"Message from Client 1"}
+        \item Client 2: \texttt{"Message from Client 2"}
+        \item Client 3: \texttt{"Message from Client 3"}
+    \end{itemize}
+    \item The server echoes the received message back to the corresponding client
+\end{itemize}
+\noindent
+
+\noindent \textbf{Demo 2:} TCP vs UDP Performance Comparison\\
+\noindent \textbf{Objective}
+\noindent Evaluate the performance differences between TCP and UDP communication using socket programming.\\
+\noindent \textbf{Task}
+\begin{itemize}
+    \item Implement TCP and UDP echo servers listening on port 5000
+    \item A client sends \textbf{1000 messages}: \texttt{"Performance Test Message"}
+    \item The server echoes each message back to the client
+\end{itemize}
+\noindent \textbf{Measurements}
+\begin{itemize}
+    \item Compute the \textbf{average Round Trip Time (RTT)}
+    \item Measure \textbf{packet loss} (messages without response)
+\end{itemize}
+
+\noindent \textbf{Hint:} Use \texttt{struct timeval start, end} with \texttt{gettimeofday()}
+
+\[
+RTT\ (ms) = (end.tv\_sec - start.tv\_sec) \times 1000 
++ \frac{(end.tv\_usec - start.tv\_usec)}{1000}
+\]
+
+\noindent \textbf{Demo 3:} Server Scheduling
+
+\noindent \textbf{Objective} : Study how scheduling policies affect server performance when multiple clients submit jobs concurrently.
+
+\noindent \textbf{Task}
+
+\begin{itemize}
+    \item Implement a TCP server listening on port \textbf{5000}.
+    \item Launch at least \textbf{5 concurrent clients}. Each client submits at least \textbf{3 job requests}.
+    \item Each job includes:
+    \begin{itemize}
+        \item processing time: \textbf{1--5 seconds}
+        \item priority: \textbf{1--5} (higher value = higher priority)
+    \end{itemize}
+    \item Implement both \textbf{FCFS} and \textbf{Priority Scheduling} at the server and compare their performance using the metrics \textbf{waiting time} and \textbf{response time}.
+\end{itemize}
+\noindent
+\rule{\textwidth}{2pt}
+\noindent
+\textbf{INTRODUCTION: }\\
+The TCP/IP model gives a layered architecture for communication between various applications that are running on different machines in a network. Communication as such in the newtrok is handled through transport layer protocols such as TCP and UDP, while the operating system (OS) offers an interface called a \textbf{socket} enabling applications to access these services. Socket programming allows applications to send and receive data over a network.\\
+
+\noindent
+In distributed environments, multiple clients and servers interact, such as users accessing services or applications exchanging data. Since processes on different machines cannot directly share memory or use standard inter-process communication, network-based communication using sockets becomes essential.\\
+
+\noindent
+\textbf{THEORY: }
+
+\noindent 
+\textbf{Transmission Control Protocol (TCP) -- Summary}
+
+\noindent
+TCP (Transmission Control Protocol) is a transport layer protocol that enables reliable communication over a network, therefore ensuring that the data is delivered accurately, in order, and without loss, even in unreliable network conditions \cite{gfg_tcp_protocol}.
+
+\begin{itemize}
+    \item Operates at the \textbf{Transport Layer} of the OSI model and is a core part of the TCP/IP suite.
+    \item Establishes a logical connection between sender and receiver before data transmission.
+    \item Guarantees ordered and reliable delivery using acknowledgements and sequence numbers.
+    \item Detects errors using check sums and retransmits lost or corrupted packets.
+    \item Implementation of  flow and congestion control to regulate data transmission efficiently.
+\end{itemize}
+\noindent 
+\textbf{ User Datagram Protocol (UDP)}
+\noindent
+UDP (User Datagram Protocol) is a transport layer protocol that provides fast, connectionless, and lightweight communication between processes. It does not guarantee reliable delivery, ordering, or error correction, making it suitable for real-time and latency-sensitive applications \cite{gfg_udp_protocol}.
+
+\noindent \textbf{Key Characteristics}
+\begin{itemize}
+    \item Connectionless communication (no setup required)
+    \item Low latency and minimal overhead
+    \item No guarantee of delivery, order, or error recovery
+    \item Suitable for time-sensitive applications
+\end{itemize}
+
+\noindent \textbf{Applications of UDP}
+\begin{itemize}
+    \item \textbf{DNS:} Fast query-response communication
+    \item \textbf{DHCP:} Dynamic IP address allocation
+    \item \textbf{VoIP:} Real-time voice communication
+    \item \textbf{RIP:} Routing updates between routers
+    \item \textbf{NTP:} Time synchronization across networks
+\end{itemize}
+
+\noindent \textbf{TCP/IP Architecture Summary}\\
+
+\noindent
+TCP and IP are two fundamental protocols: Transmission Control Protocol (TCP) and Internet Protocol (IP). Together, they form the TCP/IP architecture, which is designed for communication across large networks composed of interconnected segments.\\
+
+\noindent
+The TCP/IP model is organized as a layered stack, where each layer performs specific functions and provides services to the layer above it. The architecture consists of four layers:\\
+
+\begin{itemize}
+    \item \textbf{Application Layer:} Provides network services to user applications (e.g., HTTP, FTP, Telnet).
+    \item \textbf{Transport Layer:} Handles end-to-end communication using protocols such as TCP and UDP.
+    \item \textbf{Internet Layer:} Responsible for logical addressing and routing using IP.
+    \item \textbf{Network Access Layer:} Deals with hardware, device drivers, and physical network transmission.
+\end{itemize}
+
+\noindent
+Each layer depends on the services of the lower layers while abstracting implementation details from the upper layers. This layered design enables efficient communication between user processes and underlying network mechanisms \cite{das_socket_programming_c}. \\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Theory/Theory_architechture.png}
+    \caption{TCP/IP Architechture.\cite{das_socket_programming_c}}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent 
+\textbf{Basic Socket Programming Functions}
+
+\noindent Socket programming is performed using system calls provided by the operating system. These functions allow applications to create communication endpoints and exchange data over a network \cite{gfg_socket_programming_c}.
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Function} & \textbf{Purpose} \\
+\hline
+\texttt{socket()} & Create a communication endpoint \\
+\texttt{bind()} & Associate socket with an IP address and port \\
+\texttt{listen()} & Enable server to accept connections \\
+\texttt{accept()} & Accept a client connection \\
+\texttt{connect()} & Initiate connection to server \\
+\texttt{send()/recv()} & Exchange data between client and server \\
+\texttt{close()} & Terminate the connection \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Theory/TCPIPsocketAPI.png}
+    \caption{Socket Functions and their sequences for TCP/IP Client and server.\cite{das_socket_programming_c}}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Theory/UDPSocketAPI.png}
+    \caption{Socket Functions and their sequences for UDP Client and server.\cite{das_socket_programming_c}}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{RESULTS:}\\
+
+\noindent
+\textbf{Demo 1:}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/Demo1Server_output.png}
+    \caption{Server Terminal Output after running server.c and running all the different client programs.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/Demo1Server_output.png}
+    \caption{Client Output after running client.c .}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent
+\textbf{Demo 2:}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/Demo_2_tcp_server.png}
+    \caption{Server terminal output after running \texttt{tcp\_server.c}}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/Demo_2_tcp_client.png}
+    \caption{Client Terminal output after running \texttt{tcp\_client.c}}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/Demo_2_udp_server.png}
+    \caption{Client Terminal output after running \texttt{udp\_server.c}}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Results/Demo_2_udp_client.png}
+    \caption{Client Terminal output after running \texttt{udp\_client.c}}
+    \label{fig:placeholder}
+\end{figure}
+
+
+
+\noindent
+\textbf{DISCUSSION:}\\
+\textbf{What is a port? Do we need different ports in a multi-client architecture?
+}
+\noindent
+An IP address uniquely identifies a host in a network, but it is not sufficient to identify specific applications that are running on that host. To distinguish between multiple applications, the transport layer uses port numbers. Each application is assigned a unique port number, allowing incoming packets to be delivered to the correct application process \cite{das_socket_programming_c}.\\
+
+\noindent
+Based on the experiment done in the lab, we do not need different ports in a multi-client architecture. However we need to be careful about the ports. Suppose a server has been assigned a port, multiple client need to have the same port numbers so that a connection is established. In this sense, the answer of the question is valid. \\
+
+\noindent
+\textbf{Can we have the same IP address for different clients and still have a working multi-client architecture? How?}
+\noindent
+Yes, multiple clients can share the same public IP address and still maintain a working multi-client architecture. This happens in server's end. Servers distinguish between clients sharing the same IP address by utilizing unique source ports, y creating a distinct 4-tuple (Source IP, Source Port, Destination IP, Destination Port) for each connection. This process enables the server to identify and treat each client's network connection as a separate, independent stream \cite{agrawal_tcp_4tuple}.\\
+
+\noindent
+The RTT Time for TCP/IP and UDP was same with zero packet loss.\\
+\noindent
+The Port number used in personal computer was different as this was reserved for some internal process. These sources were helpful in debugging it \cite{stackoverflow,nishio_port5000}.
+
+\noindent
+\textbf{Future Work: } - Generate some packet losses and implementing Demo 3.\\
+
+\noindent
+\textbf{ACKNOWLEDGEMENT: }\\
+I would like to share my thanks to Prof. Amitalok J Budkuley for explaining the TCP/UDP Sockets. I would like to extend my thanks to TA MV Srivatsav for explaining the
+fundamentals of the experiment with great presentation and code,  and helping throughout along with the problem description. I
+would like to thank my colleagues Mayank Singh, Saptarshi Bhattacharjee and Soumyajit Adak for collaborating in lab throughout the experiment.
+\noindent
+\printbibliography
+
+\noindent
+\textbf{APPENDIX (CODE): }\\
+\appendix
+\noindent
+
+% Main Script for AoI Tasks
+\noindent
+% Server
+\noindent
+\textbf{Demo 1}\\
+\textbf{server.c}
+\begin{lstlisting}
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#define PORT 9000
+int main(int argc, char const* argv[])
+{
+    int server_fd, new_socket;
+    ssize_t valread;
+    struct sockaddr_in address;
+    int opt = 1;
+    socklen_t addrlen = sizeof(address);
+    char buffer[1024] = { 0 };
+
+    // Creating socket file descriptor
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        perror("socket failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // Forcefully attaching socket to the port 8080 
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR , &opt, sizeof(opt))) {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    }
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(PORT);
+
+    // Forcefully attaching socket to the port 8080
+    if (bind(server_fd, (struct sockaddr*)&address,
+             sizeof(address))
+        < 0) {
+        perror("bind failed");
+        exit(EXIT_FAILURE);
+    }
+    if (listen(server_fd, 3) < 0) {
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
+
+    while(1){
+        if ((new_socket
+         = accept(server_fd, (struct sockaddr*)&address,
+                  &addrlen))
+        < 0) {
+        perror("accept");
+        exit(EXIT_FAILURE);
+        }
+      
+        // subtract 1 for the null
+        // terminator at the end
+        valread = read(new_socket, buffer,
+                       1024 - 1); 
+        printf("%s\n", buffer);
+        send(new_socket, buffer, strlen(buffer), 0);
+
+        // closing the connected socket
+        close(new_socket);     
+
+    }
+    // closing the listening socket
+    close(server_fd);
+    
+    return 0;
+}
+\end{lstlisting}
+
+% Client Code
+\noindent
+\textbf{client1.c}
+\begin{lstlisting}
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#define PORT 9000
+
+int main(int argc, char const* argv[])
+{
+    int status, valread, client_fd;
+    struct sockaddr_in serv_addr;
+    char* hello = "Message from Client 1";
+    char buffer[1024] = { 0 };
+    if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        printf("\n Socket creation error \n");
+        return -1;
+    }
+
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+
+    // Convert IPv4 and IPv6 addresses from text to binary
+    // form
+    if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)
+        <= 0) {
+        printf(
+            "\nInvalid address/ Address not supported \n");
+        return -1;
+    }
+
+    if ((status
+         = connect(client_fd, (struct sockaddr*)&serv_addr,
+                   sizeof(serv_addr)))
+        < 0) {
+        printf("\nConnection Failed \n");
+        return -1;
+    }
+  
+    // subtract 1 for the null
+    // terminator at the end
+    send(client_fd, hello, strlen(hello), 0);
+
+    valread = read(client_fd, buffer,
+                   1024 - 1); 
+    printf("%s\n", buffer);
+
+    // closing the connected socket
+    close(client_fd);
+    return 0;
+}
+\end{lstlisting}
+
+% Demo 2 Output
+\noindent
+\textbf{Demo 2}\\
+\textbf{\texttt{tcp\_server.c}}
+\begin{lstlisting}
+// tcp_server.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+#define PORT 55000
+#define BUFFER_SIZE 1024
+
+int main() {
+    int server_fd, new_socket;
+    struct sockaddr_in address;
+    int addrlen = sizeof(address);
+    char buffer[BUFFER_SIZE];
+
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(PORT);
+
+    bind(server_fd, (struct sockaddr *)&address, sizeof(address));
+    listen(server_fd, 3);
+
+    printf("TCP Server listening on port %d...\n", PORT);
+
+    new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+
+    while (1) {
+        int valread = read(new_socket, buffer, BUFFER_SIZE);
+        if (valread <= 0) break;
+
+        send(new_socket, buffer, valread, 0);
+    }
+
+    close(new_socket);
+    close(server_fd);
+    return 0;
+}
+\end{lstlisting}
+
+\noindent
+\textbf{\texttt{tcp\_client.c}}
+\begin{lstlisting}
+// tcp_client.c
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/time.h>
+
+#define PORT 55000
+#define NUM_MSG 1000
+
+int main() {
+    int sock;
+    struct sockaddr_in server_addr;
+    char *message = "Performance Test Message";
+    char buffer[1024];
+
+    struct timeval start, end;
+
+    double total_rtt = 0;
+    int received = 0;
+
+    sock = socket(AF_INET, SOCK_STREAM, 0);
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(PORT);
+    inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr);
+
+    connect(sock, (struct sockaddr *)&server_addr, sizeof(server_addr));
+
+    for (int i = 0; i < NUM_MSG; i++) {
+        gettimeofday(&start, NULL);
+
+        // Send message
+        send(sock, message, strlen(message), 0);
+
+        // Receive echo
+        int n = read(sock, buffer, sizeof(buffer));
+
+        gettimeofday(&end, NULL);
+
+        if (n > 0) {
+            buffer[n] = '\0';
+
+            if (strcmp(buffer, message) == 0) {
+                printf("Performace Test Message %d\n", i+1);
+            } else {
+                printf("Mismatch at message %d\n", i+1);
+            }
+
+            double rtt = (end.tv_sec - start.tv_sec) * 1000.0 +
+                        (end.tv_usec - start.tv_usec) / 1000.0;
+
+            total_rtt += rtt;
+            received++;
+        } else {
+            printf("No response for message %d\n", i+1);
+        }
+    }
+
+    printf("TCP Average RTT = %.3f ms\n", total_rtt / received);
+    printf("TCP Packet Loss = %d\n", NUM_MSG - received);
+
+    close(sock);
+    return 0;
+}
+\end{lstlisting}
+
+\noindent
+\textbf{\texttt{udp\_server.c}}
+\begin{lstlisting}
+// udp_server.c
+#include <stdio.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+
+#define PORT 55000
+#define BUFFER_SIZE 1024
+
+int main() {
+    int sockfd;
+    char buffer[BUFFER_SIZE];
+    struct sockaddr_in server_addr, client_addr;
+    socklen_t len = sizeof(client_addr);
+
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(PORT);
+
+    bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+
+    printf("UDP Server listening on port %d...\n", PORT);
+
+    while (1) {
+        int n = recvfrom(sockfd, buffer, BUFFER_SIZE, 0,
+                         (struct sockaddr *)&client_addr, &len);
+
+        sendto(sockfd, buffer, n, 0,
+               (struct sockaddr *)&client_addr, len);
+    }
+
+    close(sockfd);
+    return 0;
+}
+\end{lstlisting}
+
+\noindent
+\textbf{\texttt{udpp\_client.c}}
+\begin{lstlisting}
+// udp_client.c
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/time.h>
+
+#define PORT 55000
+#define NUM_MSG 1000
+
+int main() {
+    int sockfd;
+    struct sockaddr_in server_addr;
+    char *message = "Performance Test Message";
+    char buffer[1024];
+
+    struct timeval start, end;
+    double total_rtt = 0;
+    int received = 0;
+
+    socklen_t len = sizeof(server_addr);
+
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+    // Set timeout (IMPORTANT for packet loss)
+    struct timeval timeout;
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+    setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(PORT);
+    inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr);
+
+    for (int i = 0; i < NUM_MSG; i++) {
+        gettimeofday(&start, NULL);
+
+        sendto(sockfd, message, strlen(message), 0,
+            (struct sockaddr *)&server_addr, len);
+
+        int n = recvfrom(sockfd, buffer, sizeof(buffer), 0,
+                        (struct sockaddr *)&server_addr, &len);
+
+        gettimeofday(&end, NULL);
+
+        if (n > 0) {
+            buffer[n] = '\0';  // null terminate
+
+            if (strcmp(buffer, message) == 0) {
+                printf("Performance Test Message %d\n", i + 1);
+            } else {
+                printf("Mismatch at message %d\n", i + 1);
+            }
+
+            double rtt = (end.tv_sec - start.tv_sec) * 1000.0 +
+                        (end.tv_usec - start.tv_usec) / 1000.0;
+
+            total_rtt += rtt;
+            received++;
+        } else {
+            // Packet loss case
+            printf("Packet lost at message %d\n", i + 1);
+        }   
+    }
+
+    printf("UDP Average RTT = %.3f ms\n", total_rtt / received);
+    printf("UDP Packet Loss = %d\n", NUM_MSG - received);
+
+    close(sockfd);
+    return 0;
+}
+\end{lstlisting}
+\end{document}
