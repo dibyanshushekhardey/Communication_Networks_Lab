@@ -67,6 +67,4 @@ int main(){
     
     primMST(mat);
     return 0;
-
-    
 }

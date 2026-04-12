@@ -1,0 +1,12 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/dibyanshu/Downloads/Communication_Networks_Lab/Practice/Expt_02/main4'
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _addEdge, symObjAddr: 0x0, symBinAddr: 0x10000386C, symSize: 0x3C }
+  - { offsetInCU: 0x41, offset: 0x41, size: 0x8, addend: 0x0, symName: _addEdge, symObjAddr: 0x0, symBinAddr: 0x10000386C, symSize: 0x3C }
+  - { offsetInCU: 0x8F, offset: 0x8F, size: 0x8, addend: 0x0, symName: _dispMat, symObjAddr: 0x3C, symBinAddr: 0x1000038A8, symSize: 0xBC }
+  - { offsetInCU: 0xEB, offset: 0xEB, size: 0x8, addend: 0x0, symName: _minVal, symObjAddr: 0xF8, symBinAddr: 0x100003964, symSize: 0x4C }
+  - { offsetInCU: 0x12F, offset: 0x12F, size: 0x8, addend: 0x0, symName: _mindist, symObjAddr: 0x144, symBinAddr: 0x1000039B0, symSize: 0xAC }
+  - { offsetInCU: 0x19D, offset: 0x19D, size: 0x8, addend: 0x0, symName: _floydWarshall, symObjAddr: 0x1F0, symBinAddr: 0x100003A5C, symSize: 0x2FC }
+  - { offsetInCU: 0x24D, offset: 0x24D, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x4EC, symBinAddr: 0x100003D58, symSize: 0x204 }
+...
